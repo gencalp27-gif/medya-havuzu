@@ -1,7 +1,5 @@
 #EXTM3U url-tvg="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" x-tvg-url="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" tvg-shift="0" cache="500"
 
-### ----------------- CANLI TELEVIZYON YAYINLARI ----------------- ###
-
 #EXTINF:-1 tvg-id="360.tr@SD" tvg-logo="https://i.imgur.com/agn47sQ.png" group-title="🇹🇷 Ulusal Kanallar",360 (720p) [Not 24/7]
 https://turkmedya-live.ercdn.net/tv360/tv360.m3u8
 #EXTINF:-1 tvg-id="ATV.tr@SD" tvg-logo="https://i.imgur.com/HyVUwFC.png" group-title="🇹🇷 Ulusal Kanallar",ATV (Turkiye) (1080p)
@@ -336,102 +334,91 @@ https://playlist.fasttvcdn.com/pl/rfrk9821hdy9dayo8wfyha/kltr-sanat-tv/playlist.
 https://live.yoltv.com/hls/stream.m3u8
 #EXTINF:-1 tvg-id="ZarokTV.tr@SD" tvg-logo="https://i.imgur.com/o0eevnb.png" group-title="🏙️ Yerel & Diğer",Zarok TV (720p)
 https://zindikurmanci.zaroktv.com.tr/hls/stream.m3u8
-
-### ----------------- FILM VE DIZI ARSIVI (VOD) ----------------- ###
-
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/bVdxrH4BQc3YLT2heDo4g0I9oGa.webp" group-title="🎬 Filmler: Vizyon & Popüler",Örümcek-Adam: Yepyeni Bir Gün
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/rjQ0GbYsLX6WDWefPrxGMCqPqx6.jpg" group-title="🎬 Filmler: Vizyon & Popüler",Saplantı
-https://dizibal.org/filmler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/pR7HAA2STN78NN7egkrp9DsKI7c.jpg" group-title="🎬 Filmler: Vizyon & Popüler",Backrooms
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/4LHyUPK4obqICeCt4rjhpQDOhJt.jpg" group-title="🎬 Filmler: Vizyon & Popüler",Oyuncak Hikayesi 5
-https://dizibal.org/filmler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/owp86mH42Un19egdeeZPImufBxN.webp" group-title="🎬 Filmler: Vizyon & Popüler",Örümcek-Adam: Eve Dönüş Yok
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/hPlQcLyL7J58mPzY8tRmS2wmfbN.jpg" group-title="🎬 Filmler: Vizyon & Popüler",Şeytan Marka Giyer  2
-https://dizibal.org/filmler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/asnbB11BomfAwip40zWOwnS319h.webp" group-title="🎬 Filmler: Vizyon & Popüler",Son Ev
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/sj8fmgVdfjldKMTCDFdVaRKvdgF.webp" group-title="🎬 Filmler: Vizyon & Popüler",Kâinatın Hâkimleri
-https://dizibal.org/filmler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/9mia27aPqVkvPtFbHZphG0tXpXY.webp" group-title="🎬 Filmler: Vizyon & Popüler",Korkunç Bir Film
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/oLld47ZT1I3iecM3OWhIphohQUJ.webp" group-title="🎬 Filmler: Vizyon & Popüler",Rage of Stars
-https://dizibal.org/filmler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w780/xTZuh9ziUjIyHBWO9OvqNIPqVWe.webp" group-title="🎬 Filmler: Vizyon & Popüler",Grand Theft Auto VI: An Extended Look
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/vvDKU3icex4lz75i98URpGanq0d.webp" group-title="🎬 Filmler: Vizyon & Popüler",Oak Caddesi'nin Sonu
-https://dizibal.org/filmler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/twJgioJt2pe3yUmmth5obRxRgnM.webp" group-title="🎬 Filmler: Vizyon & Popüler",Star Wars: Mandalorian ve Grogu
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/iViNADqAm9NNfVeOsPUmF44ND35.webp" group-title="🎬 Filmler: Vizyon & Popüler",Kötü Ruh: Cehennem Ateşi
-https://dizibal.org/filmler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/2h4ikWt6TddvIAhMdS3WGVXhaRf.webp" group-title="🎬 Filmler: Vizyon & Popüler",Alacaklı
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/hNXw1I4GmLCbSdbnduoR7SVY8Jv.jpg" group-title="🎬 Filmler: Vizyon & Popüler",Minyonlar ve Canavarlar
-https://dizibal.org/filmler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/suFNqtGOi0BsBI3uJPKkDXCwgVI.webp" group-title="🎬 Filmler: Vizyon & Popüler",Kurtuluş Projesi
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/1nzGfDErOkwsWfArtnVRaEVrkKa.webp" group-title="🎬 Filmler: Vizyon & Popüler",İfşa Günü
-https://dizibal.org/filmler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/7kRYHH9H9PjBFwz1FprbHB2AAjI.webp" group-title="🎬 Filmler: Vizyon & Popüler",Enola Holmes 3
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/yqr2EzcCGIkh367I7uD1oO9ePmO.jpg" group-title="🎬 Filmler: Vizyon & Popüler",Bir Koyun Polisiyesi
-https://dizibal.org/filmler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/qXrV3K4aCENHlp7zbrDnGqci7wj.jpg" group-title="🎬 Filmler: Vizyon & Popüler",Supergirl
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w780/360qdtu2hLnqMu8SVHMywn420w1.webp" group-title="🎬 Filmler: Vizyon & Popüler",Batman: Knightfall Part 1: Knightfall
-https://dizibal.org/filmler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/bNErActDctl6cdUGw9pnjSCmyhQ.webp" group-title="🎬 Filmler: Vizyon & Popüler",Soulm8te
-https://dizibal.org/filmler
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 #EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/7KQ8dSUHk1yDpiBfOQ4hqMLAqrX.webp" group-title="🎬 Filmler: Vizyon & Popüler",Örümcek-Adam: Eve Dönüş
-https://dizibal.org/filmler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w780/8ra17h8Z3NX14qdWaOKn0scURJR.webp" group-title="🍿 Diziler: Popüler & Yerli",The Scandal
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/pRtJagIxpfODzzb0T0NAvZSzErC.webp" group-title="🍿 Diziler: Popüler & Yerli",FROM
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/6YM292PX2gSIBk16hufmlGT3iQW.webp" group-title="🍿 Diziler: Popüler & Yerli",House of the Dragon
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/acYXu4KaDj1NIkMgObnhe4C4a0T.webp" group-title="🍿 Diziler: Popüler & Yerli",The Mentalist
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/eKJNWq4akdrviR9qEF6xPhzKQU.webp" group-title="🍿 Diziler: Popüler & Yerli",Agent Kim Reactivated
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/xsiecCxd8lkcAluw0wWwbW5CwSv.webp" group-title="🍿 Diziler: Popüler & Yerli",Dutton Ranch
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/gMYZZvnkVNTqSVnVCphWbPXwWwb.webp" group-title="🍿 Diziler: Popüler & Yerli",Silo
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w780/AdYr4DjOgXvDUMwu6vEhZy1Rnxk.webp" group-title="🍿 Diziler: Popüler & Yerli",Slow Horses
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/hWSb4UnIjlTvnvrP98NbFSO60HA.webp" group-title="🍿 Diziler: Popüler & Yerli",Criminal Minds
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/lzZpWEaqzP0qVA5nkCc5ASbNcSy.webp" group-title="🍿 Diziler: Popüler & Yerli",Avatar: The Last Airbender
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/1XS1oqL89opfnbLl8WnZY1O1uJx.webp" group-title="🍿 Diziler: Popüler & Yerli",Game of Thrones
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/owhkU6KRqdXoUQpjV8uyZGPtX58.webp" group-title="🍿 Diziler: Popüler & Yerli",Rick and Morty
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/uRHsiw1wLxPHFXkkv4Ix1s0O6f4.webp" group-title="🍿 Diziler: Popüler & Yerli",Ted Lasso
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w780/pkhR1xBgHPgxYMlSBZE903XbmE4.webp" group-title="🍿 Diziler: Popüler & Yerli",Korku Burnu
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/ztkUQFLlC19CCMYHW9o1zWhJRNq.jpg" group-title="🍿 Diziler: Popüler & Yerli",Breaking Bad
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/3Cz7ySOQJmqiuTdrc6CY0r65yDI.webp" group-title="🍿 Diziler: Popüler & Yerli",House, M.D.
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/vOYfRZ0NpUK5hG2CB2dJFnYJlGe.webp" group-title="🍿 Diziler: Popüler & Yerli",Yellowstone
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/xsrkiXg8EuNNtbPtbmvCxg95gK7.webp" group-title="🍿 Diziler: Popüler & Yerli",Lucky
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/in1R2dDc421JxsoRWaIIAqVI2KE.webp" group-title="🍿 Diziler: Popüler & Yerli",The Boys
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/eKfVzzEazSIjJMrw9ADa2x8ksLz.webp" group-title="🍿 Diziler: Popüler & Yerli",The Bear
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w780/yPLkf4EiCkR0NOvMfmpHMA2zfN3.webp" group-title="🍿 Diziler: Popüler & Yerli",Sons of Anarchy
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/hjVNQA2a12OxkpDEOQTBMbKVZ1K.webp" group-title="🍿 Diziler: Popüler & Yerli",Stranger Things
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/q8dWfc4JwQuv3HayIZeO84jAXED.webp" group-title="🍿 Diziler: Popüler & Yerli",Dexter
-https://dizibal.org/diziler
-#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w780/adLvi3u7HhgpRwL4e389YnWkvhm.webp" group-title="🍿 Diziler: Popüler & Yerli",Kill Jackie
-https://dizibal.org/diziler
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w780/8ra17h8Z3NX14qdWaOKn0scURJR.webp" group-title="🍿 Diziler: Popüler & Yerli",The Scandal - S01 E01
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/pRtJagIxpfODzzb0T0NAvZSzErC.webp" group-title="🍿 Diziler: Popüler & Yerli",FROM - S01 E01
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/6YM292PX2gSIBk16hufmlGT3iQW.webp" group-title="🍿 Diziler: Popüler & Yerli",House of the Dragon - S01 E01
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/acYXu4KaDj1NIkMgObnhe4C4a0T.webp" group-title="🍿 Diziler: Popüler & Yerli",The Mentalist - S01 E01
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/eKJNWq4akdrviR9qEF6xPhzKQU.webp" group-title="🍿 Diziler: Popüler & Yerli",Agent Kim Reactivated - S01 E01
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/xsiecCxd8lkcAluw0wWwbW5CwSv.webp" group-title="🍿 Diziler: Popüler & Yerli",Dutton Ranch - S01 E01
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/gMYZZvnkVNTqSVnVCphWbPXwWwb.webp" group-title="🍿 Diziler: Popüler & Yerli",Silo - S01 E01
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w780/AdYr4DjOgXvDUMwu6vEhZy1Rnxk.webp" group-title="🍿 Diziler: Popüler & Yerli",Slow Horses - S01 E01
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/hWSb4UnIjlTvnvrP98NbFSO60HA.webp" group-title="🍿 Diziler: Popüler & Yerli",Criminal Minds - S01 E01
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/lzZpWEaqzP0qVA5nkCc5ASbNcSy.webp" group-title="🍿 Diziler: Popüler & Yerli",Avatar: The Last Airbender - S01 E01
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/1XS1oqL89opfnbLl8WnZY1O1uJx.webp" group-title="🍿 Diziler: Popüler & Yerli",Game of Thrones - S01 E01
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/owhkU6KRqdXoUQpjV8uyZGPtX58.webp" group-title="🍿 Diziler: Popüler & Yerli",Rick and Morty - S01 E01
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/uRHsiw1wLxPHFXkkv4Ix1s0O6f4.webp" group-title="🍿 Diziler: Popüler & Yerli",Ted Lasso - S01 E01
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w780/pkhR1xBgHPgxYMlSBZE903XbmE4.webp" group-title="🍿 Diziler: Popüler & Yerli",Korku Burnu - S01 E01
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/ztkUQFLlC19CCMYHW9o1zWhJRNq.jpg" group-title="🍿 Diziler: Popüler & Yerli",Breaking Bad - S01 E01
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/3Cz7ySOQJmqiuTdrc6CY0r65yDI.webp" group-title="🍿 Diziler: Popüler & Yerli",House, M.D. - S01 E01
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/vOYfRZ0NpUK5hG2CB2dJFnYJlGe.webp" group-title="🍿 Diziler: Popüler & Yerli",Yellowstone - S01 E01
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/xsrkiXg8EuNNtbPtbmvCxg95gK7.webp" group-title="🍿 Diziler: Popüler & Yerli",Lucky - S01 E01
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/in1R2dDc421JxsoRWaIIAqVI2KE.webp" group-title="🍿 Diziler: Popüler & Yerli",The Boys - S01 E01
+https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+#EXTINF:-1 tvg-logo="https://dizibal.org/storage/tmdb/posters/w342/eKfVzzEazSIjJMrw9ADa2x8ksLz.webp" group-title="🍿 Diziler: Popüler & Yerli",The Bear - S01 E01
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
