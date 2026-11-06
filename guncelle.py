@@ -15,7 +15,6 @@ HEADERS = {
 }
 
 def guvenli_url(url):
-    """URL içindeki Türkçe karakterleri ve boşlukları temizler (Çökmeyi önler)"""
     try:
         parcalar = urllib.parse.urlsplit(url.strip())
         yol = urllib.parse.quote(parcalar.path, safe="/%&=:+-._~")
@@ -33,12 +32,11 @@ def url_getir(url, referer=None, timeout=8):
         req = urllib.request.Request(temiz_url, headers=h)
         with urllib.request.urlopen(req, context=ctx, timeout=timeout) as res:
             return res.read().decode('utf-8', errors='ignore')
-    except Exception as e:
-        print(f"[-] Atlandı ({url[:40]}...): {e}")
+    except Exception:
         return ""
 
 # ==============================================================================
-# 1. CANLI TV MOTORU (SENİN M3U.CH LİNKİN)
+# 1. CANLI TV MOTORU (M3U.CH KAYNAĞI - ÖLÜ LİNKLER FİLTRELİ)
 # ==============================================================================
 def kategori_belirle(kanal_adi):
     adi = kanal_adi.lower()
@@ -67,8 +65,8 @@ def canli_tv_getir():
         satir = satirlar[i].strip()
         if satir.startswith("#EXTINF") and i + 1 < len(satirlar):
             link = satirlar[i+1].strip()
-            # VLC'de hata verdiren ölü sunucuyu filtrele
-            if link.startswith("http") and "162.212.179.32" not in link:
+            # VLC'de hata verdiren ölü sunucuları ve şablonları kesin olarak filtrele
+            if link.startswith("http") and not any(k in link for k in ["162.212.179.32", "slide.url", "vixolity.com"]):
                 kanal_adi = satir.split(",")[-1].strip() if "," in satir else "Kanal"
                 if 'group-title="' not in satir:
                     kat = kategori_belirle(kanal_adi)
@@ -79,7 +77,7 @@ def canli_tv_getir():
     return kanallar
 
 # ==============================================================================
-# 2. MANITUX NUVIO PLUGINS MOTORU (HATA KORUMALI)
+# 2. MANITUX NUVIO GERÇEK STREAM (.M3U8 / .MP4) ÇÖZÜCÜ
 # ==============================================================================
 def manitux_provider_domain_bul(provider_id, varsayilan_domain):
     try:
@@ -93,85 +91,81 @@ def manitux_provider_domain_bul(provider_id, varsayilan_domain):
         pass
     return varsayilan_domain
 
-def sayfadan_m3u8_cikar(sayfa_url, ana_domain):
+def sayfadan_gercek_video_cikar(sayfa_url, ana_domain):
+    """
+    Sayfadan SADECE gerçek oynatılabilir .m3u8 veya .mp4 akışı çıkarır.
+    Eğer gerçek video akışı bulamazsa None döner (Bozuk web linki eklemez!).
+    """
+    if any(k in sayfa_url for k in ["slide.url", "javascript:", "#"]):
+        return None
+
     try:
-        detay_html = url_getir(sayfa_url, referer=ana_domain, timeout=5)
+        detay_html = url_getir(sayfa_url, referer=ana_domain, timeout=6)
         if not detay_html:
             return None
 
-        dogrudan = re.search(r'["\'](https?://[^"\']+\.(?:m3u8|mp4)[^"\']*)["\']', detay_html)
-        if dogrudan:
-            return dogrudan.group(1)
+        # 1. Doğrudan kaynak kod içindeki .m3u8 veya .mp4 linkini ara
+        dogrudan = re.search(r'["\'](https?://[^"\']+\.(?:m3u8|mp4)(?:\?[^"\']*)?)["\']', detay_html)
+        if dogrudan and "slide.url" not in dogrudan.group(1):
+            return dogrudan.group(1).replace("\\/", "/")
 
+        # 2. Iframe player'ları (Vidmoly, Rapidrame, Closeload vb.) tara
         iframeler = re.findall(r'<iframe[^>]+(?:src|data-src)=["\']([^"\']+)["\']', detay_html)
-        for iframe in iframeler[:2]:
+        for iframe in iframeler[:3]:
             if iframe.startswith("//"):
                 iframe = "https:" + iframe
             elif iframe.startswith("/"):
                 iframe = ana_domain + iframe
-            if any(x in iframe for x in ["youtube.com", "google.com", "facebook"]):
+            if any(x in iframe for x in ["youtube.com", "google.com", "facebook", "trailer"]):
                 continue
             
-            iframe_html = url_getir(iframe, referer=sayfa_url, timeout=4)
-            m3u8_bul = re.search(r'["\'](https?://[^"\']+\.(?:m3u8|mp4)[^"\']*)["\']', iframe_html)
+            iframe_html = url_getir(iframe, referer=sayfa_url, timeout=5)
+            if not iframe_html:
+                continue
+
+            # Player içindeki file: "https://.../master.m3u8" yapısını yakala
+            m3u8_bul = re.search(r'["\'](https?://[^"\']+\.(?:m3u8|mp4)(?:\?[^"\']*)?)["\']', iframe_html)
             if m3u8_bul:
-                return m3u8_bul.group(1)
+                return m3u8_bul.group(1).replace("\\/", "/")
     except Exception:
         pass
     return None
 
 def manitux_katalog_tara():
-    print("[*] Manitux Nuvio Plugins kaynakları taranıyor...")
+    print("[*] Manitux Nuvio Plugins üzerinden gerçek video akışları (.m3u8) taranıyor...")
     vod_listesi = []
 
     kaynaklar = [
         {
-            "id": "dizibal",
-            "ad": "DiziBal",
-            "domain": "https://dizibal.org",
-            "sayfalar": [
-                ("/filmler", "🎬 Filmler: DiziBal Yeni"),
-                ("/diziler", "🍿 Diziler: DiziBal Popüler")
-            ]
+            "id": "filmmakinesi",
+            "ad": "FilmMakinesi",
+            "domain": "https://filmmakinesi.to",
+            "sayfalar": [("/film-izle/", "🎬 Filmler: FilmMakinesi")]
         },
         {
             "id": "hdfilmcehennemi",
             "ad": "HDFilmCehennemi",
             "domain": "https://www.hdfilmcehennemi.nl",
-            "sayfalar": [
-                ("/", "🎬 Filmler: HDFilmCehennemi")
-            ]
+            "sayfalar": [("/", "🎬 Filmler: HDFilmCehennemi")]
         },
         {
-            "id": "filmmakinesi",
-            "ad": "FilmMakinesi",
-            "domain": "https://filmmakinesi.to",
-            "sayfalar": [
-                ("/film-izle/", "🎬 Filmler: FilmMakinesi")
-            ]
-        },
-        {
-            "id": "filmekseni",
-            "ad": "FilmEkseni",
-            "domain": "https://filmekseni.vip",
-            "sayfalar": [
-                ("/", "🎬 Filmler: FilmEkseni")
-            ]
+            "id": "dizibal",
+            "ad": "DiziBal",
+            "domain": "https://dizibal.org",
+            "sayfalar": [("/filmler", "🎬 Filmler: DiziBal")]
         },
         {
             "id": "diziyou",
             "ad": "DiziYou",
             "domain": "https://diziyou.one",
-            "sayfalar": [
-                ("/", "🍿 Diziler: DiziYou")
-            ]
+            "sayfalar": [("/", "🍿 Diziler: DiziYou")]
         }
     ]
 
     for k in kaynaklar:
         try:
             guncel_domain = manitux_provider_domain_bul(k["id"], k["domain"])
-            print(f" -> {k['ad']} kontrol ediliyor ({guncel_domain})...")
+            print(f" -> {k['ad']} taranıyor ({guncel_domain})...")
 
             for yol, kategori_adi in k["sayfalar"]:
                 html_icerik = url_getir(guncel_domain + yol, referer=guncel_domain, timeout=7)
@@ -183,8 +177,12 @@ def manitux_katalog_tara():
                     html_icerik, re.DOTALL | re.IGNORECASE
                 )
 
-                sayac = 0
-                for link, afis, baslik in kartlar:
+                eklenen = 0
+                for link, afis, baslik in kartlar[:25]:
+                    # Şablon veya geçersiz linkleri anında atla
+                    if any(b in link for b in ["slide.url", "javascript", "#"]):
+                        continue
+
                     temiz_baslik = html.unescape(baslik).replace("izle", "").replace("Film", "").replace("Dizi", "").strip()
                     if len(temiz_baslik) < 2:
                         continue
@@ -194,18 +192,18 @@ def manitux_katalog_tara():
                     if not afis.startswith("http"):
                         afis = guncel_domain + ("/" if not afis.startswith("/") else "") + afis
 
-                    stream_url = sayfadan_m3u8_cikar(link, guncel_domain) or link
-
-                    extinf = f'#EXTINF:-1 tvg-logo="{afis}" group-title="{kategori_adi}",{temiz_baslik}'
-                    vod_listesi.append(f"{extinf}\n{stream_url}\n")
-                    
-                    sayac += 1
-                    if sayac >= 12:
-                        break
+                    # SADECE gerçek .m3u8 veya .mp4 akışı varsa ekle!
+                    gercek_stream = sayfadan_gercek_video_cikar(link, guncel_domain)
+                    if gercek_stream:
+                        extinf = f'#EXTINF:-1 tvg-logo="{afis}" group-title="{kategori_adi}",{temiz_baslik}'
+                        vod_listesi.append(f"{extinf}\n{gercek_stream}\n")
+                        eklenen += 1
+                        if eklenen >= 10:
+                            break
         except Exception as e:
-            print(f"[-] {k['ad']} atlandı: {e}")
+            print(f"[-] {k['ad']} hatası: {e}")
 
-    print(f"[+] Manitux kaynaklarından toplam {len(vod_listesi)} içerik çekildi.")
+    print(f"[+] Doğrulanmış {len(vod_listesi)} adet gerçek .m3u8/.mp4 film akışı eklendi.")
     return vod_listesi
 
 # ==============================================================================
@@ -234,10 +232,7 @@ def master_m3u_olustur():
     with open("canli_tv.m3u", "w", encoding="utf-8") as f:
         f.writelines(ana_liste)
 
-    print(f"[🚀] Bitti! {len(canli_kanallar)} Canlı Kanal + {len(manitux_vod)} VOD kaydedildi.")
+    print(f"[🚀] Bitti! {len(canli_kanallar)} Canlı Kanal + {len(manitux_vod)} Gerçek Video kaydedildi.")
 
 if __name__ == "__main__":
-    try:
-        master_m3u_olustur()
-    except Exception as genel_hata:
-        print(f"Genel hata yakalandı: {genel_hata}")
+    master_m3u_olustur()
