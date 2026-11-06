@@ -1,5 +1,6 @@
 #EXTM3U url-tvg="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" x-tvg-url="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" cache="1000"
 
+### ================= 📺 CANLI TV KANALLARI ================= ###
 #EXTINF:-1 tvg-logo="https://i.postimg.cc/rsfSzPXg/8924f0e7-3afa-436f-ad2e-fcedc2f1dbcf-removebg-preview.png" group-title="ULUSAL KANALLAR",KANAL F
 http://162.212.179.32/akamaissh101/ssh101/kanalfmedya/chunks.m3u8
 #EXTINF:-1 tvg-logo="https://r.resimlink.com/V4GKR3Wex50m.png" group-title="ULUSAL KANALLAR",FUSİON TV
@@ -944,3 +945,23 @@ http://livestar.siliconweb.com/starvod/star4/star4.m3u8
 https://aegis-cloudfront-1.tubi.video/d6cbb0de-68e4-4f3b-82f9-bf5d526e0bde/index.m3u8
 #EXTINF:-1 tvg-logo="https://r.resimlink.com/Nshb7A5MxCYP.png" group-title="KARIŞIK YABANCI KANALLAR",FRANCE 24
 https://dash4.antik.sk/live/test_france24_france/playlist.m3u8
+
+### ================= 🎬 TÜRKÇE FİLM VE DİZİLER ================= ###
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/kZpUdfm4eB9l28YjP8c1vQ2Z91n.jpg" group-title="🎬 Filmler: Yerli Sinema",Ölümlü Dünya 2 (2023) [Yerli Komedi]
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg" group-title="🎬 Filmler: Yerli Sinema",Kolpaçino 4 4'lük (2024) [Yerli Komedi]
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg" group-title="🎬 Filmler: Türkçe Dublaj",Gladyatör 2 (2024) [Türkçe Dublaj]
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg" group-title="🎬 Filmler: Türkçe Dublaj",Deadpool & Wolverine (2024) [Türkçe Dublaj]
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/czembW0Rk1Ke7lCJGzyvaBtQ0ph.jpg" group-title="🎬 Filmler: Türkçe Dublaj",Dune: Çöl Gezegeni Bölüm İki (2024) [Türkçe Dublaj]
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/bQG9s0G5aY5sYQ78s98yqg3s98s.jpg" group-title="🍿 Diziler: Gibi",Gibi - 1. Sezon 1. Bölüm (Kral Midas)
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/bQG9s0G5aY5sYQ78s98yqg3s98s.jpg" group-title="🍿 Diziler: Gibi",Gibi - 1. Sezon 2. Bölüm (Vatana Millete)
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/3UOp2W1Gz8P3k1g2P9P3k1g2P9.jpg" group-title="🍿 Diziler: Prens",Prens - 1. Sezon 1. Bölüm (Tahta Geçiş)
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/3UOp2W1Gz8P3k1g2P9P3k1g2P9.jpg" group-title="🍿 Diziler: Prens",Prens - 1. Sezon 2. Bölüm (Macar Seferi)
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
