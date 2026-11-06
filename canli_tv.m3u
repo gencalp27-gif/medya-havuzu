@@ -334,7 +334,7 @@ https://live.artidijitalmedya.com/artidijital_vuslattv/vuslattv/chunks.m3u8
 #EXTINF:-1 tvg-logo="https://i.postimg.cc/VNnCsQpT/38508988-ico.png" group-title="YEREL KANALLAR",KON TV
 http://176.65.153.12:6004/play/a022/index.m3u8
 #EXTINF:-1 tvg-logo="https://i.postimg.cc/nrCVzqMX/37975656-ico.png" group-title="YEREL KANALLAR",ETV MANİSA
-https://edge1.socialsmart.tv/manisaetv/bant1/playlist.m3u8
+https://edge2.taksimbilisim.com/manisaetv/bant1/chunks.m3u8
 #EXTINF:-1 tvg-logo="https://asset.artidijitalmedya.com/image/188x188/channels/v1/logo_46.png?v=3" group-title="YEREL KANALLAR",ETV KAYSERİ
 https://live.artidijitalmedya.com/artidijital_etv/etv/chunks.m3u8
 #EXTINF:-1 tvg-logo="https://www.altastv.com.tr/images/altastvlogo.png" group-title="YEREL KANALLAR",ORDU ALTAŞ TV
