@@ -2,6 +2,7 @@ import urllib.request
 import re
 import ssl
 
+# SSL Ayarları
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
@@ -13,13 +14,14 @@ HEADERS = {
 def url_getir(url):
     try:
         req = urllib.request.Request(url, headers=HEADERS)
-        with urllib.request.urlopen(req, context=ctx, timeout=12) as res:
+        with urllib.request.urlopen(req, context=ctx, timeout=20) as res:
             return res.read().decode('utf-8', errors='ignore')
     except Exception as e:
+        print(f"[-] İndirme hatası ({url}): {e}")
         return ""
 
 # ==========================================
-# ÖZEL SEÇİLMİŞ 1080p FULL HD SPOR KANALLARI
+# 1. 1080p FULL HD CANLI SPOR KANALLARI
 # ==========================================
 PREMIUM_SPOR_KANALLARI = [
     {
@@ -58,30 +60,20 @@ PREMIUM_SPOR_KANALLARI = [
         "logo": "https://upload.wikimedia.org/wikipedia/tr/2/26/Sports_TV_logo.png",
         "link": "https://sportstv-live.ercdn.net/sportstv/sportstv.m3u8"
     },
-    # --- DÜNYA & MOTOR SPORLARI (1080p YÜKSEK BİTRATE) ---
     {
-        "ad": "Red Bull TV HD [1080p - Extreme & Motor]",
+        "ad": "Red Bull TV HD [1080p Extreme & Motor]",
         "kategori": "🏎️ Spor: Dünya & Motor Sporları",
         "logo": "https://raw.githubusercontent.com/iptv-org/tv-logos/master/countries/at/red-bull-tv.png",
         "link": "https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8"
     },
     {
-        "ad": "FIFA+ Live HD [Futbol & Maçlar]",
+        "ad": "FIFA+ Live HD",
         "kategori": "🏎️ Spor: Dünya & Motor Sporları",
         "logo": "https://raw.githubusercontent.com/iptv-org/tv-logos/master/countries/ch/fifa-plus.png",
         "link": "https://fifa-fifaplus-1-eu.rakuten.wurl.tv/playlist.m3u8"
-    },
-    {
-        "ad": "World Poker Tour HD",
-        "kategori": "🏎️ Spor: Dünya & Motor Sporları",
-        "logo": "https://raw.githubusercontent.com/iptv-org/tv-logos/master/countries/us/world-poker-tour.png",
-        "link": "https://wpt-live.akamaized.net/hls/live/2034981/WPT_Linear_1/master.m3u8"
     }
 ]
 
-# ==========================================
-# GENEL TÜRK KANALLARI VE KATEGORİLEME
-# ==========================================
 def kategori_belirle(kanal_adi):
     adi = kanal_adi.lower()
     if any(k in adi for k in ["spor", "sport", "tjk", "fb tv", "bjk", "gs tv"]):
@@ -100,27 +92,56 @@ def kategori_belirle(kanal_adi):
         return "🕌 Dini & Kültür"
     return "🏙️ Yerel & Diğer"
 
-def m3u_olustur():
-    print("[*] 1080p Spor ve Ulusal kanallar hazırlanıyor...")
+# ==========================================
+# 2. POWER-SİNEMA FİLM HAVUZU ÇEKİCİ
+# ==========================================
+def sinema_filmlerini_getir():
+    print("[*] Power-Sinema film havuzu çekiliyor...")
+    sinema_url = "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/power-sinema.m3u"
+    icerik = url_getir(sinema_url)
     
-    # Canlı açık yayın havuzunu çek
-    icerik = url_getir("https://iptv-org.github.io/iptv/countries/tr.m3u")
+    if not icerik:
+        return []
+
+    filmler = []
+    satirlar = icerik.splitlines()
+    for i in range(len(satirlar)):
+        satir = satirlar[i].strip()
+        if satir.startswith("#EXTINF"):
+            if i + 1 < len(satirlar):
+                link = satirlar[i+1].strip()
+                if link.startswith("http"):
+                    # Kategori yoksa şık bir film kategorisi ekle
+                    if 'group-title="' not in satir:
+                        satir = satir.replace("#EXTINF:-1", '#EXTINF:-1 group-title="🎬 Sinema Arşivi"')
+                    filmler.append(f"{satir}\n{link}\n")
+
+    print(f"[+] Toplam {len(filmler)} adet film başarıyla çekildi.")
+    return filmler
+
+# ==========================================
+# 3. MASTER M3U ÜRETİCİ (BİRLEŞTİRME)
+# ==========================================
+def master_m3u_olustur():
+    print("[*] Canlı yayınlar ve filmler birleştiriliyor...")
     
-    m3u_satirlari = [
+    # 1. Başlık ve EPG
+    cikti = [
         '#EXTM3U url-tvg="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" '
         'x-tvg-url="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" cache="1000"\n'
     ]
 
-    # 1. EN BAŞA ÖZEL FULL HD SPOR KANALLARINI BAS
-    m3u_satirlari.append("\n### ================= ⚽ CANLI SPOR KANALLARI (1080p HD) ================= ###\n")
+    # 2. HD Spor Kanalları
+    cikti.append("\n### ================= ⚽ CANLI SPOR KANALLARI (1080p HD) ================= ###\n")
     for spor in PREMIUM_SPOR_KANALLARI:
         extinf = f'#EXTINF:-1 tvg-logo="{spor["logo"]}" group-title="{spor["kategori"]}",{spor["ad"]}'
-        m3u_satirlari.append(f"{extinf}\n{spor['link']}\n")
+        cikti.append(f"{extinf}\n{spor['link']}\n")
 
-    # 2. DİĞER ULUSAL VE TEMATİK KANALLAR
-    m3u_satirlari.append("\n### ================= 🇹🇷 ULUSAL VE DİĞER KANALLAR ================= ###\n")
-    if icerik:
-        satirlar = icerik.splitlines()
+    # 3. Ulusal ve Diğer Canlı TV Kanalları
+    canli_icerik = url_getir("https://iptv-org.github.io/iptv/countries/tr.m3u")
+    if canli_icerik:
+        cikti.append("\n### ================= 🇹🇷 ULUSAL VE DİĞER KANALLAR ================= ###\n")
+        satirlar = canli_icerik.splitlines()
         for i in range(len(satirlar)):
             satir = satirlar[i].strip()
             if satir.startswith("#EXTINF"):
@@ -128,23 +149,26 @@ def m3u_olustur():
                     link = satirlar[i+1].strip()
                     if link.startswith("http"):
                         kanal_adi = satir.split(",")[-1].strip() if "," in satir else "Kanal"
-                        kategori = kategori_belirle(kanal_adi)
-                        
-                        # Zaten özel eklediğimiz ana spor kanallarını mükerrer olmasın diye atla
                         if any(x in kanal_adi.lower() for x in ["trt spor", "a spor", "fenerbahçe", "fb tv", "tjk tv"]):
                             continue
-                            
+                        kategori = kategori_belirle(kanal_adi)
                         if 'group-title="' in satir:
-                            yeni_satir = re.sub(r'group-title="[^"]*"', f'group-title="{kategori}"', satir)
+                            satir = re.sub(r'group-title="[^"]*"', f'group-title="{kategori}"', satir)
                         else:
-                            yeni_satir = satir.replace("#EXTINF:-1", f'#EXTINF:-1 group-title="{kategori}"')
-                            
-                        m3u_satirlari.append(f"{yeni_satir}\n{link}\n")
+                            satir = satir.replace("#EXTINF:-1", f'#EXTINF:-1 group-title="{kategori}"')
+                        cikti.append(f"{satir}\n{link}\n")
 
+    # 4. Power-Sinema Filmleri
+    filmler = sinema_filmlerini_getir()
+    if filmler:
+        cikti.append("\n### ================= 🎬 FİLM VE SİNEMA ARŞİVİ ================= ###\n")
+        cikti.extend(filmler)
+
+    # Dosyaya kaydet
     with open("canli_tv.m3u", "w", encoding="utf-8") as f:
-        f.writelines(m3u_satirlari)
+        f.writelines(cikti)
 
-    print("[🚀] 1080p Full HD Spor ve TV havuzu başarıyla güncellendi!")
+    print(f"[🚀] Tamamlandı! Canlı kanallar ve {len(filmler)} film tek bir listede toplandı.")
 
 if __name__ == "__main__":
-    m3u_olustur()
+    master_m3u_olustur()
