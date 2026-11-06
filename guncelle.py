@@ -13,14 +13,14 @@ HEADERS = {
 def url_getir(url):
     try:
         req = urllib.request.Request(url, headers=HEADERS)
-        with urllib.request.urlopen(req, context=ctx, timeout=25) as res:
+        with urllib.request.urlopen(req, context=ctx, timeout=30) as res:
             return res.read().decode('utf-8', errors='ignore')
     except Exception as e:
-        print(f"[-] Hata ({url}): {e}")
+        print(f"[-] İndirme hatası ({url}): {e}")
         return ""
 
 # ==========================================
-# 1. 1080p SPOR VE ULUSAL KANALLAR
+# 1. 1080p SPOR KANALLARI (ÖZEL LİSTE)
 # ==========================================
 PREMIUM_SPOR_KANALLARI = [
     {
@@ -92,10 +92,41 @@ def kategori_belirle(kanal_adi):
     return "🏙️ Yerel & Diğer"
 
 # ==========================================
-# 2. POWER-SİNEMA: ÖZEL "🎬 FİLMLER" AYRIŞTIRICI
+# 2. M3U.CH CANLI TV HAVUZU ÇEKİCİ
+# ==========================================
+def m3uch_kanallarini_getir():
+    print("[*] m3u.ch canlı TV havuzu taranıyor...")
+    kaynak_url = "https://m3u.ch/pl/1d84259d4bf3a9832067b3c4be608cbe_6f37cddc89cc539132a35d2ac0248c89.m3u"
+    icerik = url_getir(kaynak_url)
+    
+    if not icerik:
+        return []
+
+    kanallar = []
+    satirlar = icerik.splitlines()
+    for i in range(len(satirlar)):
+        satir = satirlar[i].strip()
+        if satir.startswith("#EXTINF"):
+            if i + 1 < len(satirlar):
+                link = satirlar[i+1].strip()
+                if link.startswith("http"):
+                    kanal_adi = satir.split(",")[-1].strip() if "," in satir else "Kanal"
+                    
+                    # Eğer listede zaten group-title varsa koru, yoksa belirle
+                    if 'group-title="' not in satir:
+                        kat = kategori_belirle(kanal_adi)
+                        satir = satir.replace("#EXTINF:-1", f'#EXTINF:-1 group-title="{kat}"')
+                        
+                    kanallar.append(f"{satir}\n{link}\n")
+
+    print(f"[+] m3u.ch kaynağından {len(kanallar)} canlı kanal başarıyla çekildi.")
+    return kanallar
+
+# ==========================================
+# 3. POWER-SİNEMA FİLM HAVUZU ÇEKİCİ
 # ==========================================
 def sinema_filmlerini_hazirla():
-    print("[*] Power-Sinema filmleri çekiliyor ve '🎬 Filmler' olarak ayrıştırılıyor...")
+    print("[*] Power-Sinema filmleri çekiliyor...")
     sinema_url = "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/power-sinema.m3u"
     icerik = url_getir(sinema_url)
     
@@ -110,56 +141,54 @@ def sinema_filmlerini_hazirla():
             if i + 1 < len(satirlar):
                 link = satirlar[i+1].strip()
                 if link.startswith("http"):
-                    # Varsa mevcut kategoriyi bul
                     kategori_eslesme = re.search(r'group-title="([^"]*)"', satir)
                     if kategori_eslesme and kategori_eslesme.group(1):
                         mevcut_kat = kategori_eslesme.group(1).strip()
-                        # Eğer zaten Filmler demiyorsa başına 🎬 Filmler ekle
                         if not mevcut_kat.startswith("🎬"):
                             yeni_kat = f"🎬 Filmler: {mevcut_kat}"
                         else:
                             yeni_kat = mevcut_kat
                         satir = re.sub(r'group-title="[^"]*"', f'group-title="{yeni_kat}"', satir)
                     else:
-                        # Kategori hiç yoksa doğrudan 🎬 Filmler yap
                         satir = satir.replace("#EXTINF:-1", '#EXTINF:-1 group-title="🎬 Filmler"')
 
                     filmler.append(f"{satir}\n{link}\n")
 
-    print(f"[+] Toplam {len(filmler)} film '🎬 Filmler' kategorisiyle ayrıştırıldı.")
     return filmler
 
 # ==========================================
-# 3. M3U OLUŞTURMA MOTORU
+# 4. MASTER M3U ÜRETİCİ
 # ==========================================
 def master_m3u_olustur():
-    # 1. Filmleri hazırla
+    # 1. Filmleri ayrı olarak filmler.m3u'ya kaydet
     filmler = sinema_filmlerini_hazirla()
-    
-    # 2. Yalnızca Filmler için ayrı bir M3U oluştur (filmler.m3u)
     if filmler:
         with open("filmler.m3u", "w", encoding="utf-8") as f_film:
             f_film.write('#EXTM3U cache="1000"\n\n')
             f_film.writelines(filmler)
-        print("[+] Sadece filmlerden oluşan 'filmler.m3u' dosyası da ayrıca kaydedildi.")
 
-    # 3. Ana Master Liste (canli_tv.m3u - Canlı TV + Filmler)
+    # 2. Ana Liste (canli_tv.m3u)
     ana_liste = [
         '#EXTM3U url-tvg="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" '
         'x-tvg-url="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" cache="1000"\n'
     ]
 
-    # Spor Kanalları
+    # Özel 1080p Spor Kanalları
     ana_liste.append("\n### ================= ⚽ CANLI SPOR KANALLARI (1080p HD) ================= ###\n")
     for spor in PREMIUM_SPOR_KANALLARI:
         extinf = f'#EXTINF:-1 tvg-logo="{spor["logo"]}" group-title="{spor["kategori"]}",{spor["ad"]}'
         ana_liste.append(f"{extinf}\n{spor['link']}\n")
 
-    # Ulusal ve Diğer TV Kanalları
-    canli_icerik = url_getir("https://iptv-org.github.io/iptv/countries/tr.m3u")
-    if canli_icerik:
-        ana_liste.append("\n### ================= 🇹🇷 ULUSAL VE DİĞER KANALLAR ================= ###\n")
-        satirlar = canli_icerik.splitlines()
+    # m3u.ch'den Gelen Canlı TV Kanalları
+    m3uch_kanallari = m3uch_kanallarini_getir()
+    if m3uch_kanallari:
+        ana_liste.append("\n### ================= 📺 CANLI TV KANALLARI ================= ###\n")
+        ana_liste.extend(m3uch_kanallari)
+
+    # Standart Açık Kaynak TV Kanalları (Yedek Havuz)
+    acik_icerik = url_getir("https://iptv-org.github.io/iptv/countries/tr.m3u")
+    if acik_icerik:
+        satirlar = acik_icerik.splitlines()
         for i in range(len(satirlar)):
             satir = satirlar[i].strip()
             if satir.startswith("#EXTINF"):
@@ -176,7 +205,7 @@ def master_m3u_olustur():
                             satir = satir.replace("#EXTINF:-1", f'#EXTINF:-1 group-title="{kategori}"')
                         ana_liste.append(f"{satir}\n{link}\n")
 
-    # Filmler Bölümü (Ayrı Kategori Olarak En Alta Eklenir)
+    # Filmler (Listenin en altında ayrı klasör olarak)
     if filmler:
         ana_liste.append("\n### ================= 🎬 FİLM VE SİNEMA ARŞİVİ ================= ###\n")
         ana_liste.extend(filmler)
@@ -184,7 +213,7 @@ def master_m3u_olustur():
     with open("canli_tv.m3u", "w", encoding="utf-8") as f:
         f.writelines(ana_liste)
 
-    print("[🚀] canli_tv.m3u ve filmler.m3u başarıyla güncellendi!")
+    print("[🚀] canli_tv.m3u başarıyla güncellendi!")
 
 if __name__ == "__main__":
     master_m3u_olustur()
