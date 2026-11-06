@@ -334,3 +334,13 @@ https://playlist.fasttvcdn.com/pl/rfrk9821hdy9dayo8wfyha/kltr-sanat-tv/playlist.
 https://live.yoltv.com/hls/stream.m3u8
 #EXTINF:-1 tvg-id="ZarokTV.tr@SD" tvg-logo="https://i.imgur.com/o0eevnb.png" group-title="🏙️ Yerel & Diğer",Zarok TV (720p)
 https://zindikurmanci.zaroktv.com.tr/hls/stream.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg" group-title="🎬 Filmler: Türkçe Dublaj",Gladyatör 2 (2024) [Türkçe Dublaj]
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/kZpUdfm4eB9l28YjP8c1vQ2Z91n.jpg" group-title="🎬 Filmler: Yerli Sinema",Ölümlü Dünya 2 (2023) [Yerli]
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/bQG9s0G5aY5sYQ78s98yqg3s98s.jpg" group-title="🍿 Diziler: Gibi",Gibi - S01 E01 (Kral Midas)
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/bQG9s0G5aY5sYQ78s98yqg3s98s.jpg" group-title="🍿 Diziler: Gibi",Gibi - S01 E02 (Vatana Millete)
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/pRtJagIxpfODzzb0T0NAvZSzErC.webp" group-title="🍿 Diziler: FROM",FROM - S01 E01 (Uzun Gece)
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
