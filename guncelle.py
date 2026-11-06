@@ -2,7 +2,6 @@ import urllib.request
 import re
 import ssl
 
-# SSL Ayarları
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
@@ -14,14 +13,14 @@ HEADERS = {
 def url_getir(url):
     try:
         req = urllib.request.Request(url, headers=HEADERS)
-        with urllib.request.urlopen(req, context=ctx, timeout=20) as res:
+        with urllib.request.urlopen(req, context=ctx, timeout=25) as res:
             return res.read().decode('utf-8', errors='ignore')
     except Exception as e:
-        print(f"[-] İndirme hatası ({url}): {e}")
+        print(f"[-] Hata ({url}): {e}")
         return ""
 
 # ==========================================
-# 1. 1080p FULL HD CANLI SPOR KANALLARI
+# 1. 1080p SPOR VE ULUSAL KANALLAR
 # ==========================================
 PREMIUM_SPOR_KANALLARI = [
     {
@@ -93,10 +92,10 @@ def kategori_belirle(kanal_adi):
     return "🏙️ Yerel & Diğer"
 
 # ==========================================
-# 2. POWER-SİNEMA FİLM HAVUZU ÇEKİCİ
+# 2. POWER-SİNEMA: ÖZEL "🎬 FİLMLER" AYRIŞTIRICI
 # ==========================================
-def sinema_filmlerini_getir():
-    print("[*] Power-Sinema film havuzu çekiliyor...")
+def sinema_filmlerini_hazirla():
+    print("[*] Power-Sinema filmleri çekiliyor ve '🎬 Filmler' olarak ayrıştırılıyor...")
     sinema_url = "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/power-sinema.m3u"
     icerik = url_getir(sinema_url)
     
@@ -111,36 +110,55 @@ def sinema_filmlerini_getir():
             if i + 1 < len(satirlar):
                 link = satirlar[i+1].strip()
                 if link.startswith("http"):
-                    # Kategori yoksa şık bir film kategorisi ekle
-                    if 'group-title="' not in satir:
-                        satir = satir.replace("#EXTINF:-1", '#EXTINF:-1 group-title="🎬 Sinema Arşivi"')
+                    # Varsa mevcut kategoriyi bul
+                    kategori_eslesme = re.search(r'group-title="([^"]*)"', satir)
+                    if kategori_eslesme and kategori_eslesme.group(1):
+                        mevcut_kat = kategori_eslesme.group(1).strip()
+                        # Eğer zaten Filmler demiyorsa başına 🎬 Filmler ekle
+                        if not mevcut_kat.startswith("🎬"):
+                            yeni_kat = f"🎬 Filmler: {mevcut_kat}"
+                        else:
+                            yeni_kat = mevcut_kat
+                        satir = re.sub(r'group-title="[^"]*"', f'group-title="{yeni_kat}"', satir)
+                    else:
+                        # Kategori hiç yoksa doğrudan 🎬 Filmler yap
+                        satir = satir.replace("#EXTINF:-1", '#EXTINF:-1 group-title="🎬 Filmler"')
+
                     filmler.append(f"{satir}\n{link}\n")
 
-    print(f"[+] Toplam {len(filmler)} adet film başarıyla çekildi.")
+    print(f"[+] Toplam {len(filmler)} film '🎬 Filmler' kategorisiyle ayrıştırıldı.")
     return filmler
 
 # ==========================================
-# 3. MASTER M3U ÜRETİCİ (BİRLEŞTİRME)
+# 3. M3U OLUŞTURMA MOTORU
 # ==========================================
 def master_m3u_olustur():
-    print("[*] Canlı yayınlar ve filmler birleştiriliyor...")
+    # 1. Filmleri hazırla
+    filmler = sinema_filmlerini_hazirla()
     
-    # 1. Başlık ve EPG
-    cikti = [
+    # 2. Yalnızca Filmler için ayrı bir M3U oluştur (filmler.m3u)
+    if filmler:
+        with open("filmler.m3u", "w", encoding="utf-8") as f_film:
+            f_film.write('#EXTM3U cache="1000"\n\n')
+            f_film.writelines(filmler)
+        print("[+] Sadece filmlerden oluşan 'filmler.m3u' dosyası da ayrıca kaydedildi.")
+
+    # 3. Ana Master Liste (canli_tv.m3u - Canlı TV + Filmler)
+    ana_liste = [
         '#EXTM3U url-tvg="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" '
         'x-tvg-url="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" cache="1000"\n'
     ]
 
-    # 2. HD Spor Kanalları
-    cikti.append("\n### ================= ⚽ CANLI SPOR KANALLARI (1080p HD) ================= ###\n")
+    # Spor Kanalları
+    ana_liste.append("\n### ================= ⚽ CANLI SPOR KANALLARI (1080p HD) ================= ###\n")
     for spor in PREMIUM_SPOR_KANALLARI:
         extinf = f'#EXTINF:-1 tvg-logo="{spor["logo"]}" group-title="{spor["kategori"]}",{spor["ad"]}'
-        cikti.append(f"{extinf}\n{spor['link']}\n")
+        ana_liste.append(f"{extinf}\n{spor['link']}\n")
 
-    # 3. Ulusal ve Diğer Canlı TV Kanalları
+    # Ulusal ve Diğer TV Kanalları
     canli_icerik = url_getir("https://iptv-org.github.io/iptv/countries/tr.m3u")
     if canli_icerik:
-        cikti.append("\n### ================= 🇹🇷 ULUSAL VE DİĞER KANALLAR ================= ###\n")
+        ana_liste.append("\n### ================= 🇹🇷 ULUSAL VE DİĞER KANALLAR ================= ###\n")
         satirlar = canli_icerik.splitlines()
         for i in range(len(satirlar)):
             satir = satirlar[i].strip()
@@ -156,19 +174,17 @@ def master_m3u_olustur():
                             satir = re.sub(r'group-title="[^"]*"', f'group-title="{kategori}"', satir)
                         else:
                             satir = satir.replace("#EXTINF:-1", f'#EXTINF:-1 group-title="{kategori}"')
-                        cikti.append(f"{satir}\n{link}\n")
+                        ana_liste.append(f"{satir}\n{link}\n")
 
-    # 4. Power-Sinema Filmleri
-    filmler = sinema_filmlerini_getir()
+    # Filmler Bölümü (Ayrı Kategori Olarak En Alta Eklenir)
     if filmler:
-        cikti.append("\n### ================= 🎬 FİLM VE SİNEMA ARŞİVİ ================= ###\n")
-        cikti.extend(filmler)
+        ana_liste.append("\n### ================= 🎬 FİLM VE SİNEMA ARŞİVİ ================= ###\n")
+        ana_liste.extend(filmler)
 
-    # Dosyaya kaydet
     with open("canli_tv.m3u", "w", encoding="utf-8") as f:
-        f.writelines(cikti)
+        f.writelines(ana_liste)
 
-    print(f"[🚀] Tamamlandı! Canlı kanallar ve {len(filmler)} film tek bir listede toplandı.")
+    print("[🚀] canli_tv.m3u ve filmler.m3u başarıyla güncellendi!")
 
 if __name__ == "__main__":
     master_m3u_olustur()
