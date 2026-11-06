@@ -948,20 +948,16 @@ https://dash4.antik.sk/live/test_france24_france/playlist.m3u8
 
 ### ================= 🎬 TÜRKÇE FİLM VE DİZİLER (VOD) ================= ###
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/kZpUdfm4eB9l28YjP8c1vQ2Z91n.jpg" group-title="🎬 Filmler: Yerli Sinema",Ölümlü Dünya 2 (2023) [Yerli Komedi]
-https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+https://medya-kopru.genc-alp27.workers.dev/?url=https%3A%2F%2Fcommondatastorage.googleapis.com%2Fgtv-videos-bucket%2Fsample%2FTearsOfSteel.mp4&ref=https%3A%2F%2Fdizibal.org%2F
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg" group-title="🎬 Filmler: Yerli Sinema",Kolpaçino 4 4'lük (2024) [Yerli Komedi]
-https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+https://medya-kopru.genc-alp27.workers.dev/?url=https%3A%2F%2Fcommondatastorage.googleapis.com%2Fgtv-videos-bucket%2Fsample%2FWeAreGoingOnBullrun.mp4&ref=https%3A%2F%2Fdizibal.org%2F
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg" group-title="🎬 Filmler: Türkçe Dublaj",Gladyatör 2 (2024) [Türkçe Dublaj]
-https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+https://medya-kopru.genc-alp27.workers.dev/?url=https%3A%2F%2Fcommondatastorage.googleapis.com%2Fgtv-videos-bucket%2Fsample%2FElephantsDream.mp4&ref=https%3A%2F%2Fvidmoly.to%2F
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg" group-title="🎬 Filmler: Türkçe Dublaj",Deadpool & Wolverine (2024) [Türkçe Dublaj]
-https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
-#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/czembW0Rk1Ke7lCJGzyvaBtQ0ph.jpg" group-title="🎬 Filmler: Türkçe Dublaj",Dune: Bölüm İki (2024) [Türkçe Dublaj]
-https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+https://medya-kopru.genc-alp27.workers.dev/?url=https%3A%2F%2Fcommondatastorage.googleapis.com%2Fgtv-videos-bucket%2Fsample%2FForBiggerBlazes.mp4&ref=https%3A%2F%2Fvidmoly.to%2F
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/bQG9s0G5aY5sYQ78s98yqg3s98s.jpg" group-title="🍿 Diziler: Gibi",Gibi - 1. Sezon 1. Bölüm (Kral Midas)
-https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+https://medya-kopru.genc-alp27.workers.dev/?url=https%3A%2F%2Fcommondatastorage.googleapis.com%2Fgtv-videos-bucket%2Fsample%2FForBiggerEscapes.mp4&ref=https%3A%2F%2Fdizibal.org%2F
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/bQG9s0G5aY5sYQ78s98yqg3s98s.jpg" group-title="🍿 Diziler: Gibi",Gibi - 1. Sezon 2. Bölüm (Vatana Millete)
-https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+https://medya-kopru.genc-alp27.workers.dev/?url=https%3A%2F%2Fcommondatastorage.googleapis.com%2Fgtv-videos-bucket%2Fsample%2FForBiggerFun.mp4&ref=https%3A%2F%2Fdizibal.org%2F
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/3UOp2W1Gz8P3k1g2P9P3k1g2P9.jpg" group-title="🍿 Diziler: Prens",Prens - 1. Sezon 1. Bölüm (Tahta Geçiş)
-https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
-#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w500/3UOp2W1Gz8P3k1g2P9P3k1g2P9.jpg" group-title="🍿 Diziler: Prens",Prens - 1. Sezon 2. Bölüm (Macar Seferi)
-https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+https://medya-kopru.genc-alp27.workers.dev/?url=https%3A%2F%2Fcommondatastorage.googleapis.com%2Fgtv-videos-bucket%2Fsample%2FForBiggerJoyBlazes.mp4&ref=https%3A%2F%2Fdizibal.org%2F
