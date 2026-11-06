@@ -1,8 +1,31 @@
 import urllib.request
 import re
-import json
+import html
+import ssl
 
-# --- 1. CANLI TV KATEGORİLEME ---
+# SSL Sertifika uyarılarını aşmak için context
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7'
+}
+
+def url_getir(url):
+    try:
+        req = urllib.request.Request(url, headers=HEADERS)
+        with urllib.request.urlopen(req, context=ctx, timeout=15) as res:
+            return res.read().decode('utf-8', errors='ignore')
+    except Exception as e:
+        print(f"[-] Hata ({url}): {e}")
+        return ""
+
+# ==========================================
+# 1. CANLI TV MOTORU
+# ==========================================
 def kategori_belirle(kanal_adi):
     adi = kanal_adi.lower()
     if any(k in adi for k in ["spor", "sport", "tjk", "fb tv", "bjk", "gs tv", "futbol"]):
@@ -21,15 +44,10 @@ def kategori_belirle(kanal_adi):
         return "🇹🇷 Ulusal Kanallar"
     return "🏙️ Yerel & Diğer"
 
-def canli_kanallari_al():
-    print("[*] Canlı TV yayınları çekiliyor...")
-    kaynak_url = "https://iptv-org.github.io/iptv/countries/tr.m3u"
-    req = urllib.request.Request(kaynak_url, headers={'User-Agent': 'Mozilla/5.0'})
-    try:
-        with urllib.request.urlopen(req) as response:
-            icerik = response.read().decode('utf-8')
-    except Exception as e:
-        print(f"[-] Canlı TV çekilemedi: {e}")
+def canli_tv_getir():
+    print("[*] Canlı TV havuzu taranıyor...")
+    icerik = url_getir("https://iptv-org.github.io/iptv/countries/tr.m3u")
+    if not icerik:
         return []
 
     kanallar = []
@@ -47,87 +65,107 @@ def canli_kanallari_al():
                     else:
                         yeni_satir = satir.replace("#EXTINF:-1", f'#EXTINF:-1 group-title="{kategori}"')
                     kanallar.append({"extinf": yeni_satir, "link": link, "kategori": kategori, "ad": kanal_adi})
-    
+
     oncelik = {
         "🇹🇷 Ulusal Kanallar": 1, "📰 Haber": 2, "⚽ Spor": 3,
         "🦁 Belgesel & Yaşam": 4, "🧸 Çocuk": 5, "🎵 Müzik": 6,
         "🕌 Dini & Kültür": 7, "🏙️ Yerel & Diğer": 8
     }
     kanallar.sort(key=lambda k: (oncelik.get(k["kategori"], 9), k["ad"]))
+    print(f"[+] {len(kanallar)} adet canlı TV kanalı hazırlandı.")
     return kanallar
 
-# --- 2. FİLM VE DİZİLER (VOD) ---
-def vod_icerikleri_al():
-    """
-    Film ve dizi içeriklerini tek M3U çatısı altına ekler.
-    Buradaki listeyi genişletebilir veya Dizibal scraper'ı ile besleyebilirsin.
-    """
-    print("[*] Film ve dizi arşivleri hazırlanıyor...")
-    vod_listesi = []
+# ==========================================
+# 2. DİZİBAL DİNAMİK VOD (FİLM & DİZİ) MOTORU
+# ==========================================
+def dizibal_icerik_tara():
+    print("[*] Dizibal ana sayfası ve güncel arşiv taranıyor...")
+    html_data = url_getir("https://dizibal.org/")
+    vodlar = []
     
-    # Örnek Filmler (Türkçe Dublaj & Yerli)
-    ornek_filmler = [
-        {
-            "ad": "Gladyatör 2 (2024) [Türkçe Dublaj]",
-            "kategori": "🎬 Filmler: Türkçe Dublaj",
-            "afis": "https://image.tmdb.org/t/p/w500/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg",
-            "link": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" # Test stream linki
-        },
-        {
-            "ad": "Ölümlü Dünya 2 (2023) [Yerli]",
-            "kategori": "🎬 Filmler: Yerli Sinema",
-            "afis": "https://image.tmdb.org/t/p/w500/kZpUdfm4eB9l28YjP8c1vQ2Z91n.jpg",
-            "link": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
-        }
-    ]
-    
-    # Örnek Diziler (Yerli Platform & Popüler Yapımlar)
-    ornek_diziler = [
-        {
-            "ad": "Gibi - S01 E01 (Kral Midas)",
-            "kategori": "🍿 Diziler: Gibi",
-            "afis": "https://image.tmdb.org/t/p/w500/bQG9s0G5aY5sYQ78s98yqg3s98s.jpg",
-            "link": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
-        },
-        {
-            "ad": "Gibi - S01 E02 (Vatana Millete)",
-            "kategori": "🍿 Diziler: Gibi",
-            "afis": "https://image.tmdb.org/t/p/w500/bQG9s0G5aY5sYQ78s98yqg3s98s.jpg",
-            "link": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
-        },
-        {
-            "ad": "FROM - S01 E01 (Uzun Gece)",
-            "kategori": "🍿 Diziler: FROM",
-            "afis": "https://image.tmdb.org/t/p/w500/pRtJagIxpfODzzb0T0NAvZSzErC.webp",
-            "link": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
-        }
-    ]
-    
-    for f in ornek_filmler + ornek_diziler:
-        extinf = f'#EXTINF:-1 tvg-logo="{f["afis"]}" group-title="{f["kategori"]}",{f["ad"]}'
-        vod_listesi.append({"extinf": extinf, "link": f["link"]})
-        
-    return vod_listesi
+    if not html_data:
+        return vodlar
 
-# --- 3. TEK BİR DOSYADA BİRLEŞTİRME ---
-def tek_m3u_birlestir():
-    kanallar = canli_kanallari_al()
-    vodlar = vod_icerikleri_al()
+    # Kartları yakalamak için düzenli ifadeler
+    # Başlık, yıl, puan, afiş ve link ayıklama
+    bloklar = re.findall(r'<a[^>]+href=["\'](/series/[^"\']+|/film/[^"\']+|/movie/[^"\']+|/[^"\']+)["\'][^>]*>(.*?)</a>', html_data, re.DOTALL)
     
-    m3u_cikti = '#EXTM3U url-tvg="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz"\n\n'
+    # Trend ve son eklenen film/dizi regex taraması
+    kart_deseni = re.compile(
+        r'<a[^>]+href=["\'](?P<link>[^"\']+)["\'][^>]*>.*?'
+        r'<img[^>]+(?:src|data-src)=["\'](?P<afis>[^"\']+)["\'].*?'
+        r'(?:<h[2-4][^>]*>|title=["\'])(?P<baslik>[^<"\']+).*?'
+        r'</a>', re.DOTALL | re.IGNORECASE
+    )
+
+    eklenen_sayisi = 0
     
-    # 1. Kısım: Canlı TV Kanalları
-    for k in kanallar:
-        m3u_cikti += f"{k['extinf']}\n{k['link']}\n"
-        
-    # 2. Kısım: Filmler ve Diziler (VOD)
-    for v in vodlar:
-        m3u_cikti += f"{v['extinf']}\n{v['link']}\n"
-        
+    # 1. Bölüm: Filmler
+    filmler_html = url_getir("https://dizibal.org/filmler")
+    if filmler_html:
+        for match in re.finditer(r'<img[^>]+src=["\']([^"\']+)["\'][^>]*alt=["\']([^"\']+)["\']', filmler_html):
+            afis, baslik = match.group(1), html.unescape(match.group(2).strip())
+            if "Film izle" in baslik or len(baslik) > 3:
+                temiz_baslik = baslik.replace("Film izle", "").strip()
+                if not afis.startswith("http"):
+                    afis = "https://dizibal.org" + afis
+                extinf = f'#EXTINF:-1 tvg-logo="{afis}" group-title="🎬 Filmler: Vizyon & Popüler",{temiz_baslik}'
+                # Oynatıcı linki (Dizibal yönlendirmesi)
+                yayin_linki = "https://dizibal.org/filmler"
+                vodlar.append({"extinf": extinf, "link": yayin_linki})
+                eklenen_sayisi += 1
+                if eklenen_sayisi >= 40:  # İlk 40 popüler film
+                    break
+
+    # 2. Bölüm: Diziler
+    diziler_html = url_getir("https://dizibal.org/diziler")
+    dizi_sayisi = 0
+    if diziler_html:
+        for match in re.finditer(r'<img[^>]+src=["\']([^"\']+)["\'][^>]*alt=["\']([^"\']+)["\']', diziler_html):
+            afis, baslik = match.group(1), html.unescape(match.group(2).strip())
+            if "Dizi izle" in baslik or len(baslik) > 3:
+                temiz_baslik = baslik.replace("Dizi izle", "").strip()
+                if not afis.startswith("http"):
+                    afis = "https://dizibal.org" + afis
+                extinf = f'#EXTINF:-1 tvg-logo="{afis}" group-title="🍿 Diziler: Popüler & Yerli",{temiz_baslik}'
+                yayin_linki = "https://dizibal.org/diziler"
+                vodlar.append({"extinf": extinf, "link": yayin_linki})
+                dizi_sayisi += 1
+                if dizi_sayisi >= 30:  # İlk 30 popüler dizi
+                    break
+
+    print(f"[+] {eklenen_sayisi} film ve {dizi_sayisi} dizi dinamik olarak çekildi.")
+    return vodlar
+
+# ==========================================
+# 3. MASTER M3U ÜRETİCİ
+# ==========================================
+def master_m3u_olustur():
+    canli_liste = canli_tv_getir()
+    vod_liste = dizibal_icerik_tara()
+
+    # Profesyonel IPTV Başlığı (EPG + Logo + Cache Ayarları)
+    cikti = (
+        '#EXTM3U url-tvg="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" '
+        'x-tvg-url="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" '
+        'tvg-shift="0" cache="500"\n\n'
+    )
+
+    # 1. Canlı TV Bölümü
+    cikti += "### ----------------- CANLI TELEVIZYON YAYINLARI ----------------- ###\n\n"
+    for k in canli_liste:
+        cikti += f"{k['extinf']}\n{k['link']}\n"
+
+    # 2. VOD (Film & Dizi) Bölümü
+    if vod_liste:
+        cikti += "\n### ----------------- FILM VE DIZI ARSIVI (VOD) ----------------- ###\n\n"
+        for v in vod_liste:
+            cikti += f"{v['extinf']}\n{v['link']}\n"
+
     with open("canli_tv.m3u", "w", encoding="utf-8") as f:
-        f.write(m3u_cikti)
-        
-    print(f"[+] Başarılı! {len(kanallar)} canlı kanal + {len(vodlar)} film/dizi 'canli_tv.m3u' içine yazıldı.")
+        f.write(cikti)
+
+    print(f"[🚀] Başarılı! Toplam {len(canli_liste) + len(vod_liste)} adet içerik tek listede kaydedildi.")
 
 if __name__ == "__main__":
-    tek_m3u_birlestir()
+    master_m3u_olustur()
