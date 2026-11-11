@@ -1,0 +1,31 @@
+
+{
+  "kaynaklar": [
+    {
+      "ad": "Turkce Filmler",
+      "url": "https://example.org/filmler.m3u",
+      "tur": "film",
+      "dil": "Turkish",
+      "yalniz_turkce": true,
+      "aktif": false
+    },
+    {
+      "ad": "Turkce Diziler",
+      "url": "https://example.org/diziler.m3u",
+      "tur": "dizi",
+      "dil": "Turkish",
+      "yalniz_turkce": true,
+      "bolum_zorunlu": true,
+      "aktif": false
+    },
+    {
+      "ad": "Karisik VOD",
+      "url": "https://example.org/vod.m3u",
+      "tur": "otomatik",
+      "dil": "Turkish",
+      "yalniz_turkce": true,
+      "bolum_zorunlu": true,
+      "aktif": false
+    }
+  ]
+}
