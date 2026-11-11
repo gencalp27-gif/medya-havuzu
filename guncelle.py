@@ -2,330 +2,758 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+MEDYA HAVUZU V4
+
+Canlı TV, film ve diziler için otomatik M3U üretici.
+
+- Farklı M3U kaynaklarını birleştirir.
+- TV kanallarını kategorilere ayırır.
+- Film ve dizileri ayrı tutar.
+- Tekrarlanan kayıtları temizler.
+- Ulusal kanalları öne alır.
+- Boş listelerde önceki dosyaları korur.
+- Durum raporu üretir.
+
+Yalnızca kullanım izni bulunan kaynakları kullanın.
+"""
+
+from __future__ import annotations
+
 import concurrent.futures
-import ipaddress
+import datetime as dt
 import json
 import os
+from pathlib import Path
 import re
-import socket
 import tempfile
+import urllib.error
 import urllib.parse
 import urllib.request
-from pathlib import Path
+
 
 ROOT = Path(__file__).resolve().parent
-CONFIG = ROOT / "kaynaklar.json"
 
-TIMEOUT = 12
-MAX_BYTES = 15 * 1024 * 1024
-MAX_WORKERS = 8
-
-USER_AGENT = "MedyaHavuzu/3.0"
-MEDIA_EXTENSIONS = (
-    ".m3u8", ".mp4", ".webm", ".mkv", ".ts", ".mpd"
+USER_AGENT = (
+    "Mozilla/5.0 "
+    "(compatible; MedyaHavuzu/4.0; +https://github.com/)"
 )
 
-ATTRIBUTE_PATTERN = re.compile(
-    r'([\w-]+)="([^"]*)"'
+ATTR_RE = re.compile(
+    r'([\w-]+)\s*=\s*"([^"]*)"'
 )
 
-EPISODE_PATTERN = re.compile(
-    r"S(\d{1,2})\s*E(\d{1,3})|"
-    r"(\d{1,2})\.\s*[Ss]ezon.{0,25}?"
-    r"(\d{1,3})\.\s*[Bb]ölüm",
-    re.IGNORECASE
-)
+TITLE_GROUPS = [
+    "01 | ULUSAL",
+    "02 | SPOR",
+    "03 | HABER",
+    "04 | SİNEMA",
+    "05 | BELGESEL",
+    "06 | ÇOCUK",
+    "07 | MÜZİK",
+    "08 | YEREL",
+    "09 | DİĞER",
+    "10 | YABANCI",
+]
+
+NATIONAL = [
+    "trt 1",
+    "atv",
+    "kanal d",
+    "show tv",
+    "star tv",
+    "now",
+    "tv8",
+    "kanal 7",
+    "teve2",
+    "360 tv",
+    "beyaz tv",
+    "a2 tv",
+]
+
+SPORT = [
+    "spor",
+    "sport",
+    "sports",
+    "futbol",
+    "basket",
+    "gs tv",
+    "fb tv",
+    "tivibu spor",
+]
+
+NEWS = [
+    "haber",
+    "news",
+    "cnn",
+    "ntv",
+    "habertürk",
+    "haberturk",
+    "tvnet",
+    "bloomberg",
+    "ekotürk",
+    "ekoturk",
+]
+
+MOVIE = [
+    "sinema",
+    "cinema",
+    "movie",
+    "film",
+    "movies",
+]
+
+DOC = [
+    "belgesel",
+    "documentary",
+    "discovery",
+    "nature",
+    "history",
+    "national geographic",
+]
+
+KIDS = [
+    "çocuk",
+    "cocuk",
+    "kids",
+    "cartoon",
+    "minika",
+    "baby",
+    "nick",
+    "disney",
+]
+
+MUSIC = [
+    "müzik",
+    "muzik",
+    "music",
+    "power",
+    "kral pop",
+    "number1",
+    "dream türk",
+    "dream turk",
+]
+
+LOCAL = [
+    "yerel",
+    "local",
+    "belediye",
+    "kent tv",
+    "şehir tv",
+]
 
 
-def safe_url(url):
-    url = str(url or "").strip()
-    parsed = urllib.parse.urlsplit(url)
+def clean(value: str) -> str:
+    return re.sub(
+        r'[\r\n\x00-\x1f"]',
+        " ",
+        str(value or "")
+    ).strip()
 
-    if parsed.scheme not in ("https", "http"):
-        return ""
 
-    if not parsed.hostname:
-        return ""
-
-    if parsed.username or parsed.password:
-        return ""
-
+def http_url(value: str) -> bool:
     try:
-        host = parsed.hostname
-        addresses = socket.getaddrinfo(
-            host, None, type=socket.SOCK_STREAM
+        parsed = urllib.parse.urlsplit(
+            value.strip()
         )
-        for entry in addresses:
-            ip = ipaddress.ip_address(entry[4][0])
-            if not ip.is_global:
-                return ""
-    except (OSError, ValueError):
-        return ""
 
-    return url
+        return (
+            parsed.scheme.lower() in ("http", "https")
+            and bool(parsed.hostname)
+            and not (
+                parsed.username or parsed.password
+            )
+        )
+
+    except ValueError:
+        return False
 
 
-def download(url, limit=MAX_BYTES):
-    if not safe_url(url):
-        raise ValueError("Güvenli olmayan adres")
+def fetch(
+    url: str,
+    timeout: int,
+    max_bytes: int
+) -> str:
+
+    if not http_url(url):
+        raise ValueError(
+            "HTTP(S) kaynak adresi gerekli"
+        )
 
     request = urllib.request.Request(
         url,
-        headers={"User-Agent": USER_AGENT}
+        headers={
+            "User-Agent": USER_AGENT,
+            "Accept": "*/*",
+        }
     )
 
     with urllib.request.urlopen(
-        request, timeout=TIMEOUT
+        request,
+        timeout=timeout
     ) as response:
-        if response.status != 200:
-            raise RuntimeError(
-                f"HTTP {response.status}"
+
+        final = response.geturl()
+
+        if not http_url(final):
+            raise ValueError(
+                "Geçersiz yönlendirme"
             )
 
-        data = response.read(limit + 1)
+        data = response.read(
+            max_bytes + 1
+        )
 
-        if len(data) > limit:
-            raise RuntimeError(
+        if len(data) > max_bytes:
+            raise ValueError(
                 "Kaynak boyut sınırını aştı"
             )
 
-        return data
-
-
-def is_turkish(name, group, language):
-    value = (
-        f"{name} {group} {language}"
-    ).casefold()
-
-    keywords = [
-        "türkçe", "turkce", "turkish",
-        "yerli", "dublaj", "altyazı",
-        "altyazi", "tr-tr"
-    ]
-
-    if any(word in value for word in keywords):
-        return True
-
-    return bool(
-        re.search(r"(?<![a-z])tr(?![a-z])", value)
+    return data.decode(
+        "utf-8-sig",
+        errors="replace"
     )
 
 
-def detect_type(name, group, preferred):
-    if preferred in ("film", "dizi"):
-        return preferred
+def parse_m3u(
+    text: str,
+    source: str
+) -> list[dict]:
 
-    text = f"{name} {group}".casefold()
-
-    if EPISODE_PATTERN.search(name):
-        return "dizi"
-
-    if any(word in text for word in [
-        "dizi", "series", "episode", "sezon"
-    ]):
-        return "dizi"
-
-    return "film"
-
-
-def parse_playlist(content, source):
-    if not content.lstrip("\ufeff \n\r").startswith(
+    if not text.lstrip().startswith(
         "#EXTM3U"
     ):
-        raise ValueError("Geçersiz M3U dosyası")
+        raise ValueError(
+            "Kaynak M3U değil"
+        )
 
-    results = []
-    current = None
+    output = []
+    entry = None
 
-    for line in content.splitlines():
-        line = line.strip()
+    for raw in text.splitlines():
+
+        line = raw.strip()
 
         if line.startswith("#EXTINF:"):
-            attributes = dict(
-                ATTRIBUTE_PATTERN.findall(line)
+
+            attrs = dict(
+                ATTR_RE.findall(line)
             )
 
             name = (
                 line.split(",", 1)[1].strip()
-                if "," in line else ""
+                if "," in line
+                else ""
             )
 
-            current = (name, attributes)
+            entry = {
+                "ad": clean(name),
+                "logo": attrs.get(
+                    "tvg-logo", ""
+                ),
+                "id": attrs.get(
+                    "tvg-id", ""
+                ),
+                "grup": attrs.get(
+                    "group-title", ""
+                ),
+                "dil": attrs.get(
+                    "tvg-language", ""
+                ),
+                "kaynak": source,
+            }
+
+        elif line.startswith("#") or not line:
             continue
 
-        if not line or line.startswith("#"):
-            continue
+        elif entry is not None:
 
-        if current is None:
-            continue
+            if (
+                http_url(line)
+                and entry["ad"]
+            ):
+                entry["url"] = line
+                output.append(entry)
 
-        name, attributes = current
-        current = None
+            entry = None
 
-        url = safe_url(line)
+    return output
 
-        if not url or not name:
-            continue
 
-        group = attributes.get("group-title", "")
-        language = attributes.get(
-            "tvg-language",
-            source.get("dil", "")
+def category(
+    item: dict,
+    region: str
+) -> str:
+
+    if region != "TR":
+        return TITLE_GROUPS[-1]
+
+    name = re.sub(
+        r'\s*\([^)]*\)|\s*\[[^]]*\]',
+        "",
+        item["ad"]
+    ).casefold().strip()
+
+    grp = item["grup"].casefold()
+
+    if (
+        name in NATIONAL
+        or any(
+            name.startswith(x + " ")
+            for x in NATIONAL
+        )
+    ):
+        return TITLE_GROUPS[0]
+
+    groups = [
+        (SPORT, 1),
+        (NEWS, 2),
+        (MOVIE, 3),
+        (DOC, 4),
+        (KIDS, 5),
+        (MUSIC, 6),
+        (LOCAL, 7),
+    ]
+
+    for keys, label in groups:
+
+        if any(
+            word in name or word in grp
+            for word in keys
+        ):
+            return TITLE_GROUPS[label]
+
+    return TITLE_GROUPS[8]
+
+
+def order_key(item: dict) -> tuple:
+
+    normalized = (
+        item["ad"]
+        .casefold()
+        .replace("türk", "turk")
+    )
+
+    national_position = next(
+        (
+            i
+            for i, x in enumerate(NATIONAL)
+            if (
+                normalized == x
+                or normalized.startswith(x + " ")
+            )
+        ),
+        999
+    )
+
+    return (
+        item["grup"],
+        national_position,
+        normalized,
+        item["url"],
+    )
+
+
+def normalize(
+    entries: list[dict],
+    kind: str,
+    region: str = "TR"
+) -> list[dict]:
+
+    seen = set()
+    result = []
+
+    for raw in entries:
+
+        item = dict(raw)
+
+        key = (
+            item["ad"].casefold(),
+            item["url"].strip(),
         )
 
-        kind = detect_type(
-            name,
-            group,
-            source.get("tur", "otomatik")
-        )
+        if key in seen:
+            continue
 
-        if source.get("yalniz_turkce", True):
-            if not is_turkish(name, group, language):
-                continue
+        seen.add(key)
 
-        if kind == "dizi":
-            if source.get("bolum_zorunlu", True):
-                if not EPISODE_PATTERN.search(name):
-                    continue
+        if kind == "canli":
 
-        if not group:
-            group = (
-                "Türkçe Diziler"
-                if kind == "dizi"
-                else "Türkçe Filmler"
+            item["grup"] = category(
+                item, region
             )
 
-        results.append({
-            "name": name,
-            "url": url,
-            "type": kind,
-            "group": group,
-            "language": language,
-            "logo": attributes.get("tvg-logo", ""),
-            "id": attributes.get("tvg-id", "")
-        })
+        elif kind == "filmler":
 
-    return results
+            item["grup"] = (
+                "FİLMLER | "
+                + clean(item["kaynak"])
+            )
+
+        else:
+
+            item["grup"] = (
+                "DİZİLER | "
+                + clean(item["kaynak"])
+            )
+
+        result.append(item)
+
+    return result
 
 
-def verify_stream(item):
-    url = item["url"]
-    parsed = urllib.parse.urlsplit(url)
-    path = parsed.path.lower()
+def render(items: list[dict]) -> str:
 
-    if not path.endswith(MEDIA_EXTENSIONS):
-        return False
+    rows = ["#EXTM3U"]
 
-    headers = {"User-Agent": USER_AGENT}
+    for x in sorted(
+        items,
+        key=order_key
+    ):
 
-    if path.endswith((".mp4", ".webm", ".mkv", ".ts")):
-        headers["Range"] = "bytes=0-2047"
+        rows.append(
+            f'#EXTINF:-1 '
+            f'tvg-id="{clean(x["id"])}" '
+            f'tvg-logo="{clean(x["logo"])}" '
+            f'tvg-language="{clean(x["dil"])}" '
+            f'group-title="{clean(x["grup"])}",'
+            f'{clean(x["ad"])}'
+        )
+
+        rows.append(x["url"])
+
+    return "\n".join(rows) + "\n"
+
+
+def write_atomic(
+    filename: str,
+    content: str
+) -> None:
+
+    fd, temp = tempfile.mkstemp(
+        dir=ROOT,
+        prefix=".liste-",
+        suffix=".tmp"
+    )
 
     try:
-        request = urllib.request.Request(
-            url, headers=headers
+
+        with os.fdopen(
+            fd,
+            "w",
+            encoding="utf-8",
+            newline="\n"
+        ) as stream:
+
+            stream.write(content)
+
+        os.replace(
+            temp,
+            ROOT / filename
+        )
+
+    finally:
+
+        if os.path.exists(temp):
+            os.unlink(temp)
+
+
+def check_stream(
+    item: dict,
+    timeout: int = 8
+) -> bool:
+
+    """
+    Hafif HTTP kontrolü.
+
+    Bu işlem yayının kesin oynatılacağını
+    garanti etmez.
+    """
+
+    try:
+
+        req = urllib.request.Request(
+            item["url"],
+            headers={
+                "User-Agent": USER_AGENT,
+                "Range": "bytes=0-1023",
+            }
         )
 
         with urllib.request.urlopen(
-            request, timeout=TIMEOUT
-        ) as response:
-            if response.status not in (200, 206):
-                return False
+            req,
+            timeout=timeout
+        ) as resp:
 
-            content_type = response.headers.get(
-                "Content-Type", ""
+            data = resp.read(1024)
+
+            mime = resp.headers.get(
+                "content-type", ""
             ).lower()
 
-            data = response.read(4096)
+            return (
+                resp.status in (200, 206)
+                and bool(data)
+                and "text/html" not in mime
+                and b"<html" not in data[:300].lower()
+            )
 
-            if "text/html" in content_type:
-                return False
-
-            if b"<html" in data.lower():
-                return False
-
-            if path.endswith(".m3u8"):
-                return data.lstrip().startswith(
-                    b"#EXTM3U"
-                )
-
-            if path.endswith(".mpd"):
-                return b"<MPD" in data
-
-            return bool(data)
-
-    except Exception as error:
-        print(
-            f"Yayın kontrol hatası: "
-            f"{item['name']}: {error}"
-        )
+    except (
+        urllib.error.URLError,
+        ValueError,
+        TimeoutError,
+        OSError
+    ):
         return False
 
 
-def sanitize(value):
-    return re.sub(
-        r'[\r\n"]', " ", str(value)
-    ).strip()
+def update() -> None:
 
+    config_path = ROOT / "kaynaklar.json"
 
-def make_entry(item):
-    name = sanitize(item["name"])
-    group = sanitize(item["group"])
-    logo = sanitize(item["logo"])
-    language = sanitize(item["language"])
-    tvg_id = sanitize(item["id"])
-
-    return (
-        f'#EXTINF:-1 tvg-id="{tvg_id}" '
-        f'tvg-logo="{logo}" '
-        f'tvg-language="{language}" '
-        f'group-title="{group}",{name}\n'
-        f'{item["url"]}\n'
-    )
-
-
-def atomic_write(path, content):
-    with tempfile.NamedTemporaryFile(
-        mode="w",
-        encoding="utf-8",
-        newline="\n",
-        dir=ROOT,
-        delete=False
-    ) as temporary:
-        temporary.write(content)
-        temporary_path = temporary.name
-
-    os.replace(temporary_path, path)
-
-
-def save_playlist(filename, items):
-    if not items:
-        print(
-            f"{filename}: Yeni geçerli kayıt yok. "
-            "Eski dosya korunuyor."
+    config = json.loads(
+        config_path.read_text(
+            encoding="utf-8"
         )
-        return
-
-    content = "#EXTM3U\n"
-    content += "".join(
-        make_entry(item) for item in items
     )
 
-    atomic_write(ROOT / filename, content)
-
-    print(
-        f"{filename}: {len(items)} kayıt yazıldı."
+    settings = config.get(
+        "ayarlar", {}
     )
 
+    timeout = int(
+        settings.get(
+            "zaman_asimi_saniye",
+            20
+        )
+    )
 
-def create_combined_playlist():
-    sections = []
+    limit = (
+        int(
+            settings.get(
+                "kaynak_boyut_limiti_mb",
+                30
+            )
+        )
+        * 1024
+        * 1024
+    )
 
-    for filename in (
-        "canli_tv.m3u",
-        "filmler.m3u",
-        "diziler.m3u"
-    ):
+    validate = bool(
+        settings.get(
+            "yayini_dogrula",
+            False
+        )
+    )
+
+    source_jobs = [
+        (kind, src)
+
+        for kind in (
+            "canli",
+            "filmler",
+            "diziler"
+        )
+
+        for src in config.get(
+            kind, []
+        )
+
+        if src.get("aktif", False)
+    ]
+
+    rows = {
+        "canli": [],
+        "filmler": [],
+        "diziler": [],
+    }
+
+    failures = []
+    successful = []
+
+    def task(job):
+
+        kind, src = job
+
+        content = fetch(
+            src["url"],
+            timeout,
+            limit
+        )
+
+        items = parse_m3u(
+            content,
+            src["ad"]
+        )
+
+        return kind, src, items
+
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=6
+    ) as pool:
+
+        future_map = {
+            pool.submit(task, job): job
+            for job in source_jobs
+        }
+
+        for future in concurrent.futures.as_completed(
+            future_map
+        ):
+
+            kind, src = future_map[future]
+
+            try:
+
+                _, _, items = future.result()
+
+                region = src.get(
+                    "bolge", "TR"
+                )
+
+                items = normalize(
+                    items,
+                    kind,
+                    region
+                )
+
+                rows[kind].extend(items)
+
+                successful.append({
+                    "tur": kind,
+                    "kaynak": src["ad"],
+                    "kayit": len(items),
+                })
+
+                print(
+                    f'[OK] {kind}: '
+                    f'{src["ad"]}: '
+                    f'{len(items)} kayıt'
+                )
+
+            except Exception as exc:
+
+                failures.append({
+                    "tur": kind,
+                    "kaynak": src.get(
+                        "ad", "?"
+                    ),
+                    "hata": str(exc),
+                })
+
+                print(
+                    f'[HATA] {kind}: '
+                    f'{src.get("ad")}: '
+                    f'{exc}'
+                )
+
+    # Kaynaklar arasında yinelenenleri temizle.
+
+    for kind in rows:
+
+        source_order = {
+            src["ad"]: i
+
+            for i, src in enumerate(
+                config.get(kind, [])
+            )
+        }
+
+        rows[kind].sort(
+            key=lambda item:
+            source_order.get(
+                item["kaynak"],
+                999
+            )
+        )
+
+        seen = set()
+        deduped = []
+
+        for item in rows[kind]:
+
+            key = (
+                item["ad"].casefold(),
+                item["url"]
+            )
+
+            if key not in seen:
+
+                deduped.append(item)
+                seen.add(key)
+
+        rows[kind] = deduped
+
+    # İsteğe bağlı yayın doğrulaması.
+
+    if validate:
+
+        for kind in rows:
+
+            with concurrent.futures.ThreadPoolExecutor(
+                max_workers=12
+            ) as pool:
+
+                mask = list(
+                    pool.map(
+                        check_stream,
+                        rows[kind]
+                    )
+                )
+
+            rows[kind] = [
+                item
+                for item, valid in zip(
+                    rows[kind],
+                    mask
+                )
+                if valid
+            ]
+
+    files = {
+        "canli": "canli_tv.m3u",
+        "filmler": "filmler.m3u",
+        "diziler": "diziler.m3u",
+    }
+
+    saved = {}
+
+    for kind, filename in files.items():
+
+        minimum = int(
+            settings.get(
+                "min_" + kind,
+                1
+            )
+        )
+
+        if len(rows[kind]) >= minimum:
+
+            write_atomic(
+                filename,
+                render(rows[kind])
+            )
+
+            saved[kind] = "güncellendi"
+
+        else:
+
+            saved[kind] = (
+                "önceki dosya korundu"
+            )
+
+        print(
+            f'{filename}: '
+            f'{len(rows[kind])} aday -> '
+            f'{saved[kind]}'
+        )
+
+    # Canlı TV + Film + Dizi birleştir.
+
+    combined = ["#EXTM3U"]
+
+    for filename in files.values():
+
         path = ROOT / filename
 
         if not path.exists():
@@ -336,138 +764,50 @@ def create_combined_playlist():
             errors="replace"
         )
 
-        if not content.lstrip().startswith("#EXTM3U"):
-            continue
-
-        lines = content.splitlines()
-
-        sections.extend(
-            line for line in lines[1:]
-        )
-
-    if sections:
-        atomic_write(
-            ROOT / "tum_icerikler.m3u",
-            "#EXTM3U\n"
-            + "\n".join(sections)
-            + "\n"
-        )
-
-
-def main():
-    print("Medya Havuzu V3 başlatıldı.")
-
-    if not CONFIG.exists():
-        raise FileNotFoundError(
-            "kaynaklar.json bulunamadı"
-        )
-
-    config = json.loads(
-        CONFIG.read_text(encoding="utf-8")
-    )
-
-    sources = [
-        source
-        for source in config.get("kaynaklar", [])
-        if source.get("aktif", False)
-    ]
-
-    all_items = {}
-    errors = []
-
-    for source in sources:
-        name = source.get("ad", "Bilinmeyen")
-        url = source.get("url", "")
-
-        try:
-            print(f"Kaynak taranıyor: {name}")
-
-            data = download(url)
-
-            content = data.decode(
-                "utf-8-sig", errors="replace"
-            )
-
-            items = parse_playlist(
-                content, source
-            )
-
-            for item in items:
-                key = (
-                    item["type"],
-                    item["url"]
-                )
-                all_items[key] = item
-
-            print(
-                f"{name}: {len(items)} aday bulundu."
-            )
-
-        except Exception as error:
-            errors.append({
-                "kaynak": name,
-                "hata": str(error)
-            })
-
-            print(
-                f"Kaynak hatası: {name}: {error}"
-            )
-
-    valid = []
-
-    with concurrent.futures.ThreadPoolExecutor(
-        max_workers=MAX_WORKERS
-    ) as executor:
-        futures = {
-            executor.submit(verify_stream, item): item
-            for item in all_items.values()
-        }
-
-        for future in concurrent.futures.as_completed(
-            futures
+        if content.lstrip().startswith(
+            "#EXTM3U"
         ):
-            item = futures[future]
 
-            try:
-                if future.result():
-                    valid.append(item)
-            except Exception as error:
-                print(error)
+            combined.extend(
+                content.splitlines()[1:]
+            )
 
-    valid.sort(
-        key=lambda item: (
-            item["type"],
-            item["group"].casefold(),
-            item["name"].casefold()
+    if len(combined) > 1:
+
+        write_atomic(
+            "tum_icerikler.m3u",
+            "\n".join(combined) + "\n"
         )
-    )
 
-    films = [
-        item for item in valid
-        if item["type"] == "film"
-    ]
-
-    series = [
-        item for item in valid
-        if item["type"] == "dizi"
-    ]
-
-    save_playlist("filmler.m3u", films)
-    save_playlist("diziler.m3u", series)
-
-    create_combined_playlist()
+    # Durum raporu.
 
     report = {
-        "surum": "3.0",
-        "kaynak_sayisi": len(sources),
-        "aday_sayisi": len(all_items),
-        "dogrulanan_filmler": len(films),
-        "dogrulanan_diziler": len(series),
-        "hatalar": errors
+        "guncellendi_utc": (
+            dt.datetime.now(
+                dt.timezone.utc
+            ).isoformat()
+        ),
+
+        "aday_sayilari": {
+            key: len(value)
+            for key, value in rows.items()
+        },
+
+        "dosya_durumlari": saved,
+
+        "basarili_kaynaklar": successful,
+
+        "hatalar": failures,
+
+        "uyari": (
+            "HTTP kontrolü oynatılabilirlik "
+            "garantisi değildir. Bazı bölgesel "
+            "ve DRM yayınları çalışmayabilir."
+        ),
     }
 
-    atomic_write(
-        ROOT / "durum.json",
+    write_atomic(
+        "durum.json",
         json.dumps(
             report,
             ensure_ascii=False,
@@ -475,12 +815,13 @@ def main():
         ) + "\n"
     )
 
-    print(json.dumps(
-        report,
-        ensure_ascii=False,
-        indent=2
-    ))
+    if not successful:
+
+        print(
+            "UYARI: Hiçbir kaynak indirilemedi. "
+            "Önceki listeler korundu."
+        )
 
 
 if __name__ == "__main__":
-    main()
+    update()
