@@ -1,238 +1,486 @@
-import urllib.request
-import urllib.parse
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import concurrent.futures
+import ipaddress
+import json
+import os
 import re
-import html
-import ssl
+import socket
+import tempfile
+import urllib.parse
+import urllib.request
+from pathlib import Path
 
-ctx = ssl.create_default_context()
-ctx.check_hostname = False
-ctx.verify_mode = ssl.CERT_NONE
+ROOT = Path(__file__).resolve().parent
+CONFIG = ROOT / "kaynaklar.json"
 
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Accept-Language': 'tr-TR,tr;q=0.9'
-}
+TIMEOUT = 12
+MAX_BYTES = 15 * 1024 * 1024
+MAX_WORKERS = 8
 
-def guvenli_url(url):
-    try:
-        parcalar = urllib.parse.urlsplit(url.strip())
-        yol = urllib.parse.quote(parcalar.path, safe="/%&=:+-._~")
-        sorgu = urllib.parse.quote(parcalar.query, safe="/?&=:+-,._~")
-        return urllib.parse.urlunsplit((parcalar.scheme, parcalar.netloc, yol, sorgu, parcalar.fragment))
-    except Exception:
-        return url
+USER_AGENT = "MedyaHavuzu/3.0"
+MEDIA_EXTENSIONS = (
+    ".m3u8", ".mp4", ".webm", ".mkv", ".ts", ".mpd"
+)
 
-def url_getir(url, referer=None, timeout=8):
-    try:
-        temiz_url = guvenli_url(url)
-        h = HEADERS.copy()
-        if referer:
-            h['Referer'] = referer
-        req = urllib.request.Request(temiz_url, headers=h)
-        with urllib.request.urlopen(req, context=ctx, timeout=timeout) as res:
-            return res.read().decode('utf-8', errors='ignore')
-    except Exception:
+ATTRIBUTE_PATTERN = re.compile(
+    r'([\w-]+)="([^"]*)"'
+)
+
+EPISODE_PATTERN = re.compile(
+    r"S(\d{1,2})\s*E(\d{1,3})|"
+    r"(\d{1,2})\.\s*[Ss]ezon.{0,25}?"
+    r"(\d{1,3})\.\s*[Bb]ölüm",
+    re.IGNORECASE
+)
+
+
+def safe_url(url):
+    url = str(url or "").strip()
+    parsed = urllib.parse.urlsplit(url)
+
+    if parsed.scheme not in ("https", "http"):
         return ""
 
-# ==============================================================================
-# 1. CANLI TV MOTORU (M3U.CH KAYNAĞI - ÖLÜ LİNKLER FİLTRELİ)
-# ==============================================================================
-def kategori_belirle(kanal_adi):
-    adi = kanal_adi.lower()
-    if any(k in adi for k in ["spor", "sport", "tjk", "fb tv", "bjk", "gs tv"]):
-        return "⚽ Spor Kanalları"
-    if any(k in adi for k in ["haber", "news", "ntv", "cnn", "haberturk", "sözcü", "sozcu", "halk tv", "tele1", "tv100", "bloomberg", "tgrt"]):
-        return "📰 Haber Kanalları"
-    if any(k in adi for k in ["trt", "atv", "kanal d", "show", "star", "now", "fox", "tv8", "teve2", "beyaz", "kanal 7"]):
-        return "🇹🇷 Ulusal Kanallar"
-    if any(k in adi for k in ["belgesel", "dmax", "tlc", "yaban"]):
-        return "🦁 Belgesel & Yaşam"
-    if any(k in adi for k in ["çocuk", "cocuk", "minika", "cartoon"]):
-        return "🧸 Çocuk & Çizgi Dizi"
-    return "🏙️ Genel & Yerel"
+    if not parsed.hostname:
+        return ""
 
-def canli_tv_getir():
-    print("[*] m3u.ch canlı TV kanalları çekiliyor...")
-    kaynak_url = "https://m3u.ch/pl/1d84259d4bf3a9832067b3c4be608cbe_6f37cddc89cc539132a35d2ac0248c89.m3u"
-    icerik = url_getir(kaynak_url, timeout=20)
-    if not icerik:
-        return []
-
-    kanallar = []
-    satirlar = icerik.splitlines()
-    for i in range(len(satirlar)):
-        satir = satirlar[i].strip()
-        if satir.startswith("#EXTINF") and i + 1 < len(satirlar):
-            link = satirlar[i+1].strip()
-            # VLC'de hata verdiren ölü sunucuları ve şablonları kesin olarak filtrele
-            if link.startswith("http") and not any(k in link for k in ["162.212.179.32", "slide.url", "vixolity.com"]):
-                kanal_adi = satir.split(",")[-1].strip() if "," in satir else "Kanal"
-                if 'group-title="' not in satir:
-                    kat = kategori_belirle(kanal_adi)
-                    satir = satir.replace("#EXTINF:-1", f'#EXTINF:-1 group-title="{kat}"')
-                kanallar.append(f"{satir}\n{link}\n")
-
-    print(f"[+] {len(kanallar)} adet canlı TV kanalı hazırlandı.")
-    return kanallar
-
-# ==============================================================================
-# 2. MANITUX NUVIO GERÇEK STREAM (.M3U8 / .MP4) ÇÖZÜCÜ
-# ==============================================================================
-def manitux_provider_domain_bul(provider_id, varsayilan_domain):
-    try:
-        js_url = f"https://raw.githubusercontent.com/manitux-app/nuvi-test-plugins/main/providers/{provider_id}.js"
-        js_kod = url_getir(js_url, timeout=6)
-        if js_kod:
-            eslesme = re.search(r'https?://[a-zA-Z0-9.-]+\.[a-z]{2,6}', js_kod)
-            if eslesme and "github" not in eslesme.group(0) and "google" not in eslesme.group(0):
-                return eslesme.group(0).rstrip("/")
-    except Exception:
-        pass
-    return varsayilan_domain
-
-def sayfadan_gercek_video_cikar(sayfa_url, ana_domain):
-    """
-    Sayfadan SADECE gerçek oynatılabilir .m3u8 veya .mp4 akışı çıkarır.
-    Eğer gerçek video akışı bulamazsa None döner (Bozuk web linki eklemez!).
-    """
-    if any(k in sayfa_url for k in ["slide.url", "javascript:", "#"]):
-        return None
+    if parsed.username or parsed.password:
+        return ""
 
     try:
-        detay_html = url_getir(sayfa_url, referer=ana_domain, timeout=6)
-        if not detay_html:
-            return None
+        host = parsed.hostname
+        addresses = socket.getaddrinfo(
+            host, None, type=socket.SOCK_STREAM
+        )
+        for entry in addresses:
+            ip = ipaddress.ip_address(entry[4][0])
+            if not ip.is_global:
+                return ""
+    except (OSError, ValueError):
+        return ""
 
-        # 1. Doğrudan kaynak kod içindeki .m3u8 veya .mp4 linkini ara
-        dogrudan = re.search(r'["\'](https?://[^"\']+\.(?:m3u8|mp4)(?:\?[^"\']*)?)["\']', detay_html)
-        if dogrudan and "slide.url" not in dogrudan.group(1):
-            return dogrudan.group(1).replace("\\/", "/")
+    return url
 
-        # 2. Iframe player'ları (Vidmoly, Rapidrame, Closeload vb.) tara
-        iframeler = re.findall(r'<iframe[^>]+(?:src|data-src)=["\']([^"\']+)["\']', detay_html)
-        for iframe in iframeler[:3]:
-            if iframe.startswith("//"):
-                iframe = "https:" + iframe
-            elif iframe.startswith("/"):
-                iframe = ana_domain + iframe
-            if any(x in iframe for x in ["youtube.com", "google.com", "facebook", "trailer"]):
-                continue
-            
-            iframe_html = url_getir(iframe, referer=sayfa_url, timeout=5)
-            if not iframe_html:
-                continue
 
-            # Player içindeki file: "https://.../master.m3u8" yapısını yakala
-            m3u8_bul = re.search(r'["\'](https?://[^"\']+\.(?:m3u8|mp4)(?:\?[^"\']*)?)["\']', iframe_html)
-            if m3u8_bul:
-                return m3u8_bul.group(1).replace("\\/", "/")
-    except Exception:
-        pass
-    return None
+def download(url, limit=MAX_BYTES):
+    if not safe_url(url):
+        raise ValueError("Güvenli olmayan adres")
 
-def manitux_katalog_tara():
-    print("[*] Manitux Nuvio Plugins üzerinden gerçek video akışları (.m3u8) taranıyor...")
-    vod_listesi = []
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": USER_AGENT}
+    )
 
-    kaynaklar = [
-        {
-            "id": "filmmakinesi",
-            "ad": "FilmMakinesi",
-            "domain": "https://filmmakinesi.to",
-            "sayfalar": [("/film-izle/", "🎬 Filmler: FilmMakinesi")]
-        },
-        {
-            "id": "hdfilmcehennemi",
-            "ad": "HDFilmCehennemi",
-            "domain": "https://www.hdfilmcehennemi.nl",
-            "sayfalar": [("/", "🎬 Filmler: HDFilmCehennemi")]
-        },
-        {
-            "id": "dizibal",
-            "ad": "DiziBal",
-            "domain": "https://dizibal.org",
-            "sayfalar": [("/filmler", "🎬 Filmler: DiziBal")]
-        },
-        {
-            "id": "diziyou",
-            "ad": "DiziYou",
-            "domain": "https://diziyou.one",
-            "sayfalar": [("/", "🍿 Diziler: DiziYou")]
-        }
+    with urllib.request.urlopen(
+        request, timeout=TIMEOUT
+    ) as response:
+        if response.status != 200:
+            raise RuntimeError(
+                f"HTTP {response.status}"
+            )
+
+        data = response.read(limit + 1)
+
+        if len(data) > limit:
+            raise RuntimeError(
+                "Kaynak boyut sınırını aştı"
+            )
+
+        return data
+
+
+def is_turkish(name, group, language):
+    value = (
+        f"{name} {group} {language}"
+    ).casefold()
+
+    keywords = [
+        "türkçe", "turkce", "turkish",
+        "yerli", "dublaj", "altyazı",
+        "altyazi", "tr-tr"
     ]
 
-    for k in kaynaklar:
-        try:
-            guncel_domain = manitux_provider_domain_bul(k["id"], k["domain"])
-            print(f" -> {k['ad']} taranıyor ({guncel_domain})...")
+    if any(word in value for word in keywords):
+        return True
 
-            for yol, kategori_adi in k["sayfalar"]:
-                html_icerik = url_getir(guncel_domain + yol, referer=guncel_domain, timeout=7)
-                if not html_icerik:
+    return bool(
+        re.search(r"(?<![a-z])tr(?![a-z])", value)
+    )
+
+
+def detect_type(name, group, preferred):
+    if preferred in ("film", "dizi"):
+        return preferred
+
+    text = f"{name} {group}".casefold()
+
+    if EPISODE_PATTERN.search(name):
+        return "dizi"
+
+    if any(word in text for word in [
+        "dizi", "series", "episode", "sezon"
+    ]):
+        return "dizi"
+
+    return "film"
+
+
+def parse_playlist(content, source):
+    if not content.lstrip("\ufeff \n\r").startswith(
+        "#EXTM3U"
+    ):
+        raise ValueError("Geçersiz M3U dosyası")
+
+    results = []
+    current = None
+
+    for line in content.splitlines():
+        line = line.strip()
+
+        if line.startswith("#EXTINF:"):
+            attributes = dict(
+                ATTRIBUTE_PATTERN.findall(line)
+            )
+
+            name = (
+                line.split(",", 1)[1].strip()
+                if "," in line else ""
+            )
+
+            current = (name, attributes)
+            continue
+
+        if not line or line.startswith("#"):
+            continue
+
+        if current is None:
+            continue
+
+        name, attributes = current
+        current = None
+
+        url = safe_url(line)
+
+        if not url or not name:
+            continue
+
+        group = attributes.get("group-title", "")
+        language = attributes.get(
+            "tvg-language",
+            source.get("dil", "")
+        )
+
+        kind = detect_type(
+            name,
+            group,
+            source.get("tur", "otomatik")
+        )
+
+        if source.get("yalniz_turkce", True):
+            if not is_turkish(name, group, language):
+                continue
+
+        if kind == "dizi":
+            if source.get("bolum_zorunlu", True):
+                if not EPISODE_PATTERN.search(name):
                     continue
 
-                kartlar = re.findall(
-                    r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>.*?<img[^>]+(?:src|data-src)=["\']([^"\']+)["\'][^>]*alt=["\']([^"\']+)["\']',
-                    html_icerik, re.DOTALL | re.IGNORECASE
+        if not group:
+            group = (
+                "Türkçe Diziler"
+                if kind == "dizi"
+                else "Türkçe Filmler"
+            )
+
+        results.append({
+            "name": name,
+            "url": url,
+            "type": kind,
+            "group": group,
+            "language": language,
+            "logo": attributes.get("tvg-logo", ""),
+            "id": attributes.get("tvg-id", "")
+        })
+
+    return results
+
+
+def verify_stream(item):
+    url = item["url"]
+    parsed = urllib.parse.urlsplit(url)
+    path = parsed.path.lower()
+
+    if not path.endswith(MEDIA_EXTENSIONS):
+        return False
+
+    headers = {"User-Agent": USER_AGENT}
+
+    if path.endswith((".mp4", ".webm", ".mkv", ".ts")):
+        headers["Range"] = "bytes=0-2047"
+
+    try:
+        request = urllib.request.Request(
+            url, headers=headers
+        )
+
+        with urllib.request.urlopen(
+            request, timeout=TIMEOUT
+        ) as response:
+            if response.status not in (200, 206):
+                return False
+
+            content_type = response.headers.get(
+                "Content-Type", ""
+            ).lower()
+
+            data = response.read(4096)
+
+            if "text/html" in content_type:
+                return False
+
+            if b"<html" in data.lower():
+                return False
+
+            if path.endswith(".m3u8"):
+                return data.lstrip().startswith(
+                    b"#EXTM3U"
                 )
 
-                eklenen = 0
-                for link, afis, baslik in kartlar[:25]:
-                    # Şablon veya geçersiz linkleri anında atla
-                    if any(b in link for b in ["slide.url", "javascript", "#"]):
-                        continue
+            if path.endswith(".mpd"):
+                return b"<MPD" in data
 
-                    temiz_baslik = html.unescape(baslik).replace("izle", "").replace("Film", "").replace("Dizi", "").strip()
-                    if len(temiz_baslik) < 2:
-                        continue
+            return bool(data)
 
-                    if not link.startswith("http"):
-                        link = guncel_domain + ("/" if not link.startswith("/") else "") + link
-                    if not afis.startswith("http"):
-                        afis = guncel_domain + ("/" if not afis.startswith("/") else "") + afis
+    except Exception as error:
+        print(
+            f"Yayın kontrol hatası: "
+            f"{item['name']}: {error}"
+        )
+        return False
 
-                    # SADECE gerçek .m3u8 veya .mp4 akışı varsa ekle!
-                    gercek_stream = sayfadan_gercek_video_cikar(link, guncel_domain)
-                    if gercek_stream:
-                        extinf = f'#EXTINF:-1 tvg-logo="{afis}" group-title="{kategori_adi}",{temiz_baslik}'
-                        vod_listesi.append(f"{extinf}\n{gercek_stream}\n")
-                        eklenen += 1
-                        if eklenen >= 10:
-                            break
-        except Exception as e:
-            print(f"[-] {k['ad']} hatası: {e}")
 
-    print(f"[+] Doğrulanmış {len(vod_listesi)} adet gerçek .m3u8/.mp4 film akışı eklendi.")
-    return vod_listesi
+def sanitize(value):
+    return re.sub(
+        r'[\r\n"]', " ", str(value)
+    ).strip()
 
-# ==============================================================================
-# 3. MASTER M3U BİRLEŞTİRİCİ
-# ==============================================================================
-def master_m3u_olustur():
-    canli_kanallar = canli_tv_getir()
-    manitux_vod = manitux_katalog_tara()
 
-    if manitux_vod:
-        with open("filmler.m3u", "w", encoding="utf-8") as f_vod:
-            f_vod.write('#EXTM3U cache="1000"\n\n')
-            f_vod.writelines(manitux_vod)
+def make_entry(item):
+    name = sanitize(item["name"])
+    group = sanitize(item["group"])
+    logo = sanitize(item["logo"])
+    language = sanitize(item["language"])
+    tvg_id = sanitize(item["id"])
 
-    ana_liste = [
-        '#EXTM3U url-tvg="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz" cache="1000"\n\n'
+    return (
+        f'#EXTINF:-1 tvg-id="{tvg_id}" '
+        f'tvg-logo="{logo}" '
+        f'tvg-language="{language}" '
+        f'group-title="{group}",{name}\n'
+        f'{item["url"]}\n'
+    )
+
+
+def atomic_write(path, content):
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        newline="\n",
+        dir=ROOT,
+        delete=False
+    ) as temporary:
+        temporary.write(content)
+        temporary_path = temporary.name
+
+    os.replace(temporary_path, path)
+
+
+def save_playlist(filename, items):
+    if not items:
+        print(
+            f"{filename}: Yeni geçerli kayıt yok. "
+            "Eski dosya korunuyor."
+        )
+        return
+
+    content = "#EXTM3U\n"
+    content += "".join(
+        make_entry(item) for item in items
+    )
+
+    atomic_write(ROOT / filename, content)
+
+    print(
+        f"{filename}: {len(items)} kayıt yazıldı."
+    )
+
+
+def create_combined_playlist():
+    sections = []
+
+    for filename in (
+        "canli_tv.m3u",
+        "filmler.m3u",
+        "diziler.m3u"
+    ):
+        path = ROOT / filename
+
+        if not path.exists():
+            continue
+
+        content = path.read_text(
+            encoding="utf-8-sig",
+            errors="replace"
+        )
+
+        if not content.lstrip().startswith("#EXTM3U"):
+            continue
+
+        lines = content.splitlines()
+
+        sections.extend(
+            line for line in lines[1:]
+        )
+
+    if sections:
+        atomic_write(
+            ROOT / "tum_icerikler.m3u",
+            "#EXTM3U\n"
+            + "\n".join(sections)
+            + "\n"
+        )
+
+
+def main():
+    print("Medya Havuzu V3 başlatıldı.")
+
+    if not CONFIG.exists():
+        raise FileNotFoundError(
+            "kaynaklar.json bulunamadı"
+        )
+
+    config = json.loads(
+        CONFIG.read_text(encoding="utf-8")
+    )
+
+    sources = [
+        source
+        for source in config.get("kaynaklar", [])
+        if source.get("aktif", False)
     ]
 
-    ana_liste.append("### ================= 📺 CANLI TV KANALLARI ================= ###\n")
-    ana_liste.extend(canli_kanallar)
+    all_items = {}
+    errors = []
 
-    if manitux_vod:
-        ana_liste.append("\n### ================= 🎬 MANITUX FİLM VE DİZİLER ================= ###\n")
-        ana_liste.extend(manitux_vod)
+    for source in sources:
+        name = source.get("ad", "Bilinmeyen")
+        url = source.get("url", "")
 
-    with open("canli_tv.m3u", "w", encoding="utf-8") as f:
-        f.writelines(ana_liste)
+        try:
+            print(f"Kaynak taranıyor: {name}")
 
-    print(f"[🚀] Bitti! {len(canli_kanallar)} Canlı Kanal + {len(manitux_vod)} Gerçek Video kaydedildi.")
+            data = download(url)
+
+            content = data.decode(
+                "utf-8-sig", errors="replace"
+            )
+
+            items = parse_playlist(
+                content, source
+            )
+
+            for item in items:
+                key = (
+                    item["type"],
+                    item["url"]
+                )
+                all_items[key] = item
+
+            print(
+                f"{name}: {len(items)} aday bulundu."
+            )
+
+        except Exception as error:
+            errors.append({
+                "kaynak": name,
+                "hata": str(error)
+            })
+
+            print(
+                f"Kaynak hatası: {name}: {error}"
+            )
+
+    valid = []
+
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=MAX_WORKERS
+    ) as executor:
+        futures = {
+            executor.submit(verify_stream, item): item
+            for item in all_items.values()
+        }
+
+        for future in concurrent.futures.as_completed(
+            futures
+        ):
+            item = futures[future]
+
+            try:
+                if future.result():
+                    valid.append(item)
+            except Exception as error:
+                print(error)
+
+    valid.sort(
+        key=lambda item: (
+            item["type"],
+            item["group"].casefold(),
+            item["name"].casefold()
+        )
+    )
+
+    films = [
+        item for item in valid
+        if item["type"] == "film"
+    ]
+
+    series = [
+        item for item in valid
+        if item["type"] == "dizi"
+    ]
+
+    save_playlist("filmler.m3u", films)
+    save_playlist("diziler.m3u", series)
+
+    create_combined_playlist()
+
+    report = {
+        "surum": "3.0",
+        "kaynak_sayisi": len(sources),
+        "aday_sayisi": len(all_items),
+        "dogrulanan_filmler": len(films),
+        "dogrulanan_diziler": len(series),
+        "hatalar": errors
+    }
+
+    atomic_write(
+        ROOT / "durum.json",
+        json.dumps(
+            report,
+            ensure_ascii=False,
+            indent=2
+        ) + "\n"
+    )
+
+    print(json.dumps(
+        report,
+        ensure_ascii=False,
+        indent=2
+    ))
+
 
 if __name__ == "__main__":
-    master_m3u_olustur()
+    main()
