@@ -1230,17 +1230,17 @@ http://45.142.104.86/stream/15/index.m3u8
 #EXTINF:-1 tvg-id="Eurosport2.fr@Germany" tvg-logo="https://i.imgur.com/f56dHgR.png" tvg-language="" group-title="10 | YABANCI",like Gecko) Chrome/156.0.0.0 Safari/537.36  group-title= Sports ,Eurosport 2 Germany
 http://46.244.99.71:8181/stream/74/index.m3u8
 #EXTINF:-1 tvg-id="SkySportF1.de@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Sky_Sport_F1_-_Logo_2020.svg/960px-Sky_Sport_F1_-_Logo_2020.svg.png" tvg-language="" group-title="10 | YABANCI",like Gecko) Chrome/156.0.0.0 Safari/537.36  group-title= Sports ,Sky Sport F1
-http://45.142.104.86/stream/49/index.m3u8
+http://94.130.48.67:8042/stream/51/index.m3u8
 #EXTINF:-1 tvg-id="SkySportGolf.de@SD" tvg-logo="https://i.imgur.com/nhhbHvs.png" tvg-language="" group-title="10 | YABANCI",like Gecko) Chrome/156.0.0.0 Safari/537.36  group-title= Sports ,Sky Sport Golf
-http://45.142.104.86/stream/54/index.m3u8
+http://94.130.48.67:8042/stream/56/index.m3u8
 #EXTINF:-1 tvg-id="SkySportMix.de@SD" tvg-logo="https://i.imgur.com/erx02nr.png" tvg-language="" group-title="10 | YABANCI",like Gecko) Chrome/156.0.0.0 Safari/537.36  group-title= Sports ,Sky Sport Mix
-http://45.142.104.86/stream/51/index.m3u8
+http://94.130.48.67:8042/stream/53/index.m3u8
 #EXTINF:-1 tvg-id="SkySportNews.de@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/de/thumb/c/cc/Sky_Sport_News_2020.svg/960px-Sky_Sport_News_2020.svg.png" tvg-language="" group-title="10 | YABANCI",like Gecko) Chrome/156.0.0.0 Safari/537.36  group-title= Sports ,Sky Sport News
-http://45.142.104.86/stream/47/index.m3u8
+http://94.130.48.67:8042/stream/49/index.m3u8
 #EXTINF:-1 tvg-id="SkySportTennis.de@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Sky_Sport_Tennis.svg/960px-Sky_Sport_Tennis.svg.png" tvg-language="" group-title="10 | YABANCI",like Gecko) Chrome/156.0.0.0 Safari/537.36  group-title= Sports ,Sky Sport Tennis
-http://45.142.104.86/stream/53/index.m3u8
+http://94.130.48.67:8042/stream/55/index.m3u8
 #EXTINF:-1 tvg-id="SkySportTopEvent.de@SD" tvg-logo="https://i.imgur.com/kQ6cVNx.png" tvg-language="" group-title="10 | YABANCI",like Gecko) Chrome/156.0.0.0 Safari/537.36  group-title= Sports ,Sky Sport Top Event
-http://45.142.104.86/stream/48/index.m3u8
+http://94.130.48.67:8042/stream/50/index.m3u8
 #EXTINF:-1 tvg-id="LoveThePlanet.es@DE" tvg-logo="https://i.imgur.com/RBcD49X.png" tvg-language="" group-title="10 | YABANCI",Love The Planet DE (1080p) [Geo-blocked]
 https://amg01821-amg01821c12-rlaxx-gb-10461.playouts.now.amagi.tv/playlist.m3u8
 #EXTINF:-1 tvg-id="MagentaMusik360.de@SD" tvg-logo="https://i.imgur.com/R74gG7U.png" tvg-language="" group-title="10 | YABANCI",MagentaMusik 360 (1080p)

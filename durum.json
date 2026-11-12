@@ -1,5 +1,5 @@
 {
-  "guncellendi_utc": "2026-11-11T20:16:46.638651+00:00",
+  "guncellendi_utc": "2026-11-12T07:25:32.254500+00:00",
   "aday_sayilari": {
     "canli": 824,
     "filmler": 114,
@@ -38,23 +38,8 @@
     },
     {
       "tur": "filmler",
-      "kaynak": "Kanal D Evde Sinema",
-      "kayit": 59
-    },
-    {
-      "tur": "diziler",
-      "kaynak": "Show TV Diziler",
-      "kayit": 913
-    },
-    {
-      "tur": "filmler",
       "kaynak": "NOW Filmler",
       "kayit": 35
-    },
-    {
-      "tur": "diziler",
-      "kaynak": "NOW Diziler",
-      "kayit": 1915
     },
     {
       "tur": "diziler",
@@ -63,13 +48,28 @@
     },
     {
       "tur": "diziler",
-      "kaynak": "TRT 1 Arşiv",
-      "kayit": 2032
+      "kaynak": "Show TV Diziler",
+      "kayit": 913
+    },
+    {
+      "tur": "filmler",
+      "kaynak": "Kanal D Evde Sinema",
+      "kayit": 59
+    },
+    {
+      "tur": "diziler",
+      "kaynak": "NOW Diziler",
+      "kayit": 1915
     },
     {
       "tur": "diziler",
       "kaynak": "Teve2 Diziler",
       "kayit": 2600
+    },
+    {
+      "tur": "diziler",
+      "kaynak": "TRT 1 Arşiv",
+      "kayit": 2032
     }
   ],
   "hatalar": [
