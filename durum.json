@@ -1,5 +1,5 @@
 {
-  "guncellendi_utc": "2026-11-13T06:57:19.341132+00:00",
+  "guncellendi_utc": "2026-11-13T19:52:13.726121+00:00",
   "aday_sayilari": {
     "canli": 825,
     "filmler": 114,
@@ -13,13 +13,13 @@
   "basarili_kaynaklar": [
     {
       "tur": "canli",
-      "kaynak": "IPTV-org Almanya",
-      "kayit": 306
+      "kaynak": "IPTV-org Türkiye",
+      "kayit": 176
     },
     {
       "tur": "canli",
-      "kaynak": "IPTV-org Türkiye",
-      "kayit": 176
+      "kaynak": "IPTV-org Almanya",
+      "kayit": 306
     },
     {
       "tur": "canli",
@@ -27,14 +27,14 @@
       "kayit": 19
     },
     {
-      "tur": "canli",
-      "kaynak": "Ömer Denizhan Türkiye",
-      "kayit": 326
-    },
-    {
       "tur": "filmler",
       "kaynak": "PuhuTV Filmler",
       "kayit": 20
+    },
+    {
+      "tur": "canli",
+      "kaynak": "Ömer Denizhan Türkiye",
+      "kayit": 326
     },
     {
       "tur": "filmler",
@@ -53,13 +53,13 @@
     },
     {
       "tur": "diziler",
-      "kaynak": "Teve2 Diziler",
-      "kayit": 2600
+      "kaynak": "Kanal D Diziler",
+      "kayit": 2661
     },
     {
       "tur": "diziler",
-      "kaynak": "Kanal D Diziler",
-      "kayit": 2661
+      "kaynak": "NOW Diziler",
+      "kayit": 1915
     },
     {
       "tur": "diziler",
@@ -68,8 +68,8 @@
     },
     {
       "tur": "diziler",
-      "kaynak": "NOW Diziler",
-      "kayit": 1915
+      "kaynak": "Teve2 Diziler",
+      "kayit": 2600
     }
   ],
   "hatalar": [
