@@ -1,5 +1,5 @@
 {
-  "guncellendi_utc": "2026-11-14T18:17:51.643211+00:00",
+  "guncellendi_utc": "2026-11-14T22:35:18.896907+00:00",
   "aday_sayilari": {
     "canli": 826,
     "filmler": 114,
@@ -12,19 +12,9 @@
   },
   "basarili_kaynaklar": [
     {
-      "tur": "canli",
-      "kaynak": "IPTV-org Almanya",
-      "kayit": 306
-    },
-    {
-      "tur": "canli",
-      "kaynak": "IPTV-org Azerbaycan",
-      "kayit": 19
-    },
-    {
-      "tur": "canli",
-      "kaynak": "IPTV-org Türkiye",
-      "kayit": 177
+      "tur": "filmler",
+      "kaynak": "PuhuTV Filmler",
+      "kayit": 20
     },
     {
       "tur": "canli",
@@ -33,13 +23,23 @@
     },
     {
       "tur": "filmler",
-      "kaynak": "PuhuTV Filmler",
-      "kayit": 20
-    },
-    {
-      "tur": "filmler",
       "kaynak": "NOW Filmler",
       "kayit": 35
+    },
+    {
+      "tur": "canli",
+      "kaynak": "IPTV-org Türkiye",
+      "kayit": 177
+    },
+    {
+      "tur": "canli",
+      "kaynak": "IPTV-org Azerbaycan",
+      "kayit": 19
+    },
+    {
+      "tur": "canli",
+      "kaynak": "IPTV-org Almanya",
+      "kayit": 306
     },
     {
       "tur": "filmler",
@@ -53,6 +53,11 @@
     },
     {
       "tur": "diziler",
+      "kaynak": "NOW Diziler",
+      "kayit": 1915
+    },
+    {
+      "tur": "diziler",
       "kaynak": "Show TV Diziler",
       "kayit": 913
     },
@@ -60,11 +65,6 @@
       "tur": "diziler",
       "kaynak": "TRT 1 Arşiv",
       "kayit": 2032
-    },
-    {
-      "tur": "diziler",
-      "kaynak": "NOW Diziler",
-      "kayit": 1915
     },
     {
       "tur": "diziler",
