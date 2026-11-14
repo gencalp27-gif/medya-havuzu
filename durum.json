@@ -1,7 +1,7 @@
 {
-  "guncellendi_utc": "2026-11-13T19:52:13.726121+00:00",
+  "guncellendi_utc": "2026-11-14T06:43:47.760230+00:00",
   "aday_sayilari": {
-    "canli": 825,
+    "canli": 826,
     "filmler": 114,
     "diziler": 10121
   },
@@ -13,13 +13,13 @@
   "basarili_kaynaklar": [
     {
       "tur": "canli",
-      "kaynak": "IPTV-org Türkiye",
-      "kayit": 176
+      "kaynak": "IPTV-org Almanya",
+      "kayit": 306
     },
     {
       "tur": "canli",
-      "kaynak": "IPTV-org Almanya",
-      "kayit": 306
+      "kaynak": "IPTV-org Türkiye",
+      "kayit": 177
     },
     {
       "tur": "canli",
@@ -27,14 +27,14 @@
       "kayit": 19
     },
     {
-      "tur": "filmler",
-      "kaynak": "PuhuTV Filmler",
-      "kayit": 20
-    },
-    {
       "tur": "canli",
       "kaynak": "Ömer Denizhan Türkiye",
       "kayit": 326
+    },
+    {
+      "tur": "filmler",
+      "kaynak": "PuhuTV Filmler",
+      "kayit": 20
     },
     {
       "tur": "filmler",
@@ -48,13 +48,13 @@
     },
     {
       "tur": "diziler",
-      "kaynak": "Show TV Diziler",
-      "kayit": 913
+      "kaynak": "Kanal D Diziler",
+      "kayit": 2661
     },
     {
       "tur": "diziler",
-      "kaynak": "Kanal D Diziler",
-      "kayit": 2661
+      "kaynak": "Show TV Diziler",
+      "kayit": 913
     },
     {
       "tur": "diziler",
