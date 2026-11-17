@@ -1,5 +1,5 @@
 {
-  "guncellendi_utc": "2026-11-17T08:08:24.436230+00:00",
+  "guncellendi_utc": "2026-11-17T21:05:49.991182+00:00",
   "aday_sayilari": {
     "canli": 830,
     "filmler": 114,
@@ -48,23 +48,23 @@
     },
     {
       "tur": "diziler",
-      "kaynak": "Show TV Diziler",
-      "kayit": 913
-    },
-    {
-      "tur": "diziler",
-      "kaynak": "TRT 1 Arşiv",
-      "kayit": 2032
-    },
-    {
-      "tur": "diziler",
       "kaynak": "Kanal D Diziler",
       "kayit": 2661
     },
     {
       "tur": "diziler",
+      "kaynak": "Show TV Diziler",
+      "kayit": 913
+    },
+    {
+      "tur": "diziler",
       "kaynak": "NOW Diziler",
       "kayit": 1915
+    },
+    {
+      "tur": "diziler",
+      "kaynak": "TRT 1 Arşiv",
+      "kayit": 2032
     },
     {
       "tur": "diziler",
