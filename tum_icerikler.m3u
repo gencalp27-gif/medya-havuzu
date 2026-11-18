@@ -27,7 +27,7 @@ https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/aspor/aspor.m3u8
 https://andro.mangeinde4.lat/checklist/androstreamlivees1.m3u8
 #EXTINF:-1 tvg-id="Eurosport2.fr@Turkiye" tvg-logo="https://i.imgur.com/f56dHgR.png" tvg-language="" group-title="02 | SPOR",Eurosport 2 Turkiye
 https://andro.mangeinde4.lat/checklist/androstreamlivees2.m3u8
-#EXTINF:-1 tvg-id="FBTV.tr@SD" tvg-logo="https://i.imgur.com/qBVqtYd.png" tvg-language="" group-title="02 | SPOR",FB TV
+#EXTINF:-1 tvg-id="FBTV.tr@SD" tvg-logo="https://i.imgur.com/qBVqtYd.png" tvg-language="" group-title="02 | SPOR",FB TV (720p)
 http://1hskrdto.rocketcdn.com/fenerbahcetv.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="HTSporTV.tr@SD" tvg-logo="https://www.htspor.com/images/manifest/social-share-logo.png" tvg-language="" group-title="02 | SPOR",HTSpor TV (1080p)
 https://ciner.daioncdn.net/ht-spor/ht-spor.m3u8?app=web
@@ -1025,10 +1025,6 @@ https://jmp2.uk/plu-622f6e1e2792150007e0b2ff.m3u8
 https://stream01.welocal.stream/stream/fhd-allgaeutv_25679/ngrp:stream_all/playlist.m3u8
 #EXTINF:-1 tvg-id="AltenburgTV.de@SD" tvg-logo="https://i.imgur.com/3JriZGR.png" tvg-language="" group-title="10 | YABANCI",Altenburg TV (1080p)
 https://58de7a369a9c4.streamlock.net/abgtv/abgtv_1080p/playlist.m3u8
-#EXTINF:-1 tvg-id="AlvinChannelTV.az@SD" tvg-logo="https://i.imgur.com/m6CM7VU.png" tvg-language="" group-title="10 | YABANCI",Alvin Channel TV (360p) [Not 24/7]
-https://cdn10-alvinchannel.yayin.com.tr/alvinchannel/alvinchannel/playlist.m3u8
-#EXTINF:-1 tvg-id="AnewZTV.az@SD" tvg-logo="https://i.imgur.com/Lwgdbuu.png" tvg-language="" group-title="10 | YABANCI",AnewZ TV
-https://53be5ef2d13aa.streamlock.net/cubesanewz-secure/smil:cubesanewz-secure-web.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="ANIMALKINGDOM.de@SD" tvg-logo="" tvg-language="" group-title="10 | YABANCI",ANIMAL KINGDOM (720p)
 https://cdn6.goprimetime.info/feed/202306140918/LC18/index.m3u8
 #EXTINF:-1 tvg-id="AnixePlus.de@SD" tvg-logo="https://i.imgur.com/hvGJ2oa.png" tvg-language="" group-title="10 | YABANCI",Anixe + (360p)
@@ -1057,8 +1053,6 @@ https://cb0c87cc605942ff9766a4e6744bbadc.mediatailor.us-east-1.amazonaws.com/v1/
 https://jmp2.uk/plu-62bc1784120ba80007935aaa.m3u8
 #EXTINF:-1 tvg-id="AyazTV.az@SD" tvg-logo="https://www.ayaztv.com/storage/assets/site_logo.png" tvg-language="" group-title="10 | YABANCI",Ayaz TV (720p)
 https://janya-ayaztv.vgcdn.net/ptnr-WebApp/title-Ayaz_TV/v1/vglive-sk-934820/main.m3u8
-#EXTINF:-1 tvg-id="AzTV.az@SD" tvg-logo="https://i.imgur.com/snBMMeH.png" tvg-language="" group-title="10 | YABANCI",Az TV (1080p)
-https://str.yodacdn.net/azertv/index.m3u8
 #EXTINF:-1 tvg-id="AzadTV.az@SD" tvg-logo="https://i.imgur.com/rDYSoRL.png" tvg-language="" group-title="10 | YABANCI",Azad TV (1080p)
 https://lives.atv.az:5443/ATV_TV_STREAM/streams/atvcanli.m3u8
 #EXTINF:-1 tvg-id="BadenTV.de@SD" tvg-logo="https://i.imgur.com/L6vE9Bz.png" tvg-language="" group-title="10 | YABANCI",Baden TV (1080p) [Not 24/7]
@@ -1086,7 +1080,7 @@ https://mcdn.br.de/br/fs/bfs_sued/hls/de/master.m3u8
 #EXTINF:-1 tvg-id="BTLTV.nl@SD" tvg-logo="https://yt3.googleusercontent.com/ytc/APkrFKZYgQTsDhkbaqmPRCPZIf0UgZqF1wa6aG2eo8ti=s176-c-k-c0x00ffffff-no-rj-mo" tvg-language="" group-title="10 | YABANCI",BTL TV (Netherlands) (1080p)
 https://cdn.liveplustv.com/v1/live/btl-tv/master.m3u8
 #EXTINF:-1 tvg-id="CBCSport.az@HD" tvg-logo="https://i.imgur.com/3mEdjuq.png" tvg-language="" group-title="10 | YABANCI",CBC Sport [Geo-blocked]
-https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8
+https://cbcsports-live.lg.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8
 #EXTINF:-1 tvg-id="CCPlutoTV.de@DACH" tvg-logo="https://images.pluto.tv/channels/5d4947590ba40f75dc29c26b/colorLogoPNG.png" tvg-language="" group-title="10 | YABANCI",CC Pluto TV
 https://jmp2.uk/plu-5d4947590ba40f75dc29c26b.m3u8
 #EXTINF:-1 tvg-id="ChaosCity.us@Germany" tvg-logo="https://i.imgur.com/1UZNdRH.png" tvg-language="" group-title="10 | YABANCI",Chaos City
@@ -1189,8 +1183,6 @@ https://sdn-global-live-streaming-packager-cache.3qsdn.com/7441/7441_264_live.m3
 https://dash4.antik.sk/live/test_kabel_eins_tizen/playlist.m3u8
 #EXTINF:-1 tvg-id="kabeleinsDoku.de@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Kabel_eins_Doku_Logo_2016.svg/960px-Kabel_eins_Doku_Logo_2016.svg.png" tvg-language="" group-title="10 | YABANCI",kabel eins Doku (720p)
 https://s6.hopslan.com/dokuX/index.m3u8
-#EXTINF:-1 tvg-id="Kanal35.az@SD" tvg-logo="https://live.ntv.az/kanal35.png" tvg-language="" group-title="10 | YABANCI",Kanal 35 (720p)
-https://str2.yodacdn.net/kanal35/index.m3u8
 #EXTINF:-1 tvg-id="KanalS.az@SD" tvg-logo="https://raw.githubusercontent.com/songwenhui239/Songwenhui239/refs/heads/main/Kanal%20S.png" tvg-language="" group-title="10 | YABANCI",Kanal S
 https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8
 #EXTINF:-1 tvg-id="Kanal12SprembergTV.de@SD" tvg-logo="https://i.ibb.co/1LzJz7Y/Channels4-profile-7.jpg" tvg-language="" group-title="10 | YABANCI",Kanal12 Spremberg TV (404p) [Not 24/7]
@@ -1211,6 +1203,8 @@ https://5acade5fc0c29.streamlock.net/OKGera/tmbz_live_high.stream/playlist.m3u8
 https://h056.video-stream-hosting.de/easycast11-live/_definst_/mp4:livestreamhd2/playlist.m3u8?ref=
 #EXTINF:-1 tvg-id="LightChannel.de@SD" tvg-logo="https://i.imgur.com/0OmBlfE.png" tvg-language="" group-title="10 | YABANCI",Light Channel (Germany) (576p) [Not 24/7]
 http://streamer1.streamhost.org:1935/salive/lctvde/playlist.m3u8
+#EXTINF:-1 tvg-id="AzTV.az@SD" tvg-logo="https://i.imgur.com/snBMMeH.png" tvg-language="" group-title="10 | YABANCI",like Gecko) Chrome/120.0.0.0 Safari/537.36  group-title= General ,Az TV
+http://109.205.166.68/server124/aztv/index3.m3u8?e=1676581573&st=AzGSZjk1DpXY1SLc1m4OvA
 #EXTINF:-1 tvg-id="TVRUS.de@SD" tvg-logo="https://i.imgur.com/2mJKi7g.png" tvg-language="" group-title="10 | YABANCI",like Gecko) Chrome/149.0.0.0 Safari/537.3  group-title= Undefined ,TVRUS
 http://213.91.179.28:8000/play/a082
 #EXTINF:-1 tvg-id="OstWest24.de@SD" tvg-logo="https://i.imgur.com/voeQ6x1.png" tvg-language="" group-title="10 | YABANCI",like Gecko) Chrome/149.0.0.0 Safari/537.36  group-title= Culture;News ,Ost West 24 (1080p)
@@ -1263,8 +1257,6 @@ https://mdrtvsnhls.akamaized.net/hls/live/2016928/mdrtvsn/index.m3u8
 https://mdrtvsahls.akamaized.net/hls/live/2016879/mdrtvsa/index.m3u8
 #EXTINF:-1 tvg-id="MDRFernsehen.de@Thuringen" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/MDR_Logo_2017.svg/960px-MDR_Logo_2017.svg.png" tvg-language="" group-title="10 | YABANCI",MDR Fernsehen Thuringen
 https://dash4.antik.sk/live/test_mdr_tizen/playlist.m3u8
-#EXTINF:-1 tvg-id="MedeniyyetTV.az@SD" tvg-logo="https://i.imgur.com/PlvaDIa.png" tvg-language="" group-title="10 | YABANCI",Medeniyyet TV (1080p)
-https://str.yodacdn.net/medeniyyettele/index.m3u8
 #EXTINF:-1 tvg-id="MoreThanSportsTV.de@SD" tvg-logo="https://i.imgur.com/SLrjImc.png" tvg-language="" group-title="10 | YABANCI",More Than Sports TV (1080p)
 https://mts1.iptv-playoutcenter.de/mts/mts-web/playlist.m3u8
 #EXTINF:-1 tvg-id="MotorvisionPlus.de@SD" tvg-logo="https://i.imgur.com/5cs5GkJ.png" tvg-language="" group-title="10 | YABANCI",Motorvision+ (720p)
@@ -1283,8 +1275,6 @@ https://jmp2.uk/plu-60080e8a4bf36000076a81b1.m3u8
 https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg01821-lovetvfast-nachrichten360-samsungde/playlist.m3u8
 #EXTINF:-1 tvg-id="Naruto.us@Germany" tvg-logo="https://i.imgur.com/M8X3Kvc.png" tvg-language="" group-title="10 | YABANCI",Naruto Germany (720p)
 https://jmp2.uk/plu-65d5fc39a25d5e00082895c4.m3u8
-#EXTINF:-1 tvg-id="NaxcivanTV.az@SD" tvg-logo="https://i.imgur.com/8yLFkdE.png" tvg-language="" group-title="10 | YABANCI",Naxcivan TV (720p)
-https://str2.yodacdn.net/ntv/video.m3u8
 #EXTINF:-1 tvg-id="NDRFernsehen.de@Hamburg" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Logo_NDR_Fernsehen_2017.svg/960px-Logo_NDR_Fernsehen_2017.svg.png" tvg-language="" group-title="10 | YABANCI",NDR Fernsehen (720p)
 https://mcdn.ndr.de/ndr/hls/ndr_fs/ndr_hh/master.m3u8
 #EXTINF:-1 tvg-id="NDRFernsehen.de@MecklenburgVorpommern" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Logo_NDR_Fernsehen_2017.svg/960px-Logo_NDR_Fernsehen_2017.svg.png" tvg-language="" group-title="10 | YABANCI",NDR Fernsehen Mecklenburg Vorpommern (720p)
@@ -1644,7 +1634,7 @@ https://mainstreammedia-worldoffreesportsintl-rakuten.amagi.tv/playlist.m3u8
 #EXTINF:-1 tvg-id="WorldPokerTour.us@Germany" tvg-logo="https://i.imgur.com/98kLMjj.png" tvg-language="" group-title="10 | YABANCI",World Poker Tour Germany
 https://jmp2.uk/plu-5ad9b7aae738977e2c312132.m3u8
 #EXTINF:-1 tvg-id="XezerTV.az@SD" tvg-logo="" tvg-language="" group-title="10 | YABANCI",Xezer TV (720p)
-https://www.xezerxeber.az/stream/index.m3u8
+https://xezer.tvstream.az/hls/stream/main_stream.m3u8
 #EXTINF:-1 tvg-id="XITEHits.nl@Germany" tvg-logo="https://i.imgur.com/N51Rp7E.png" tvg-language="" group-title="10 | YABANCI",XITE Hits Germany (1080p)
 https://d726x48n2pd5h.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-skxr1pazhltvp/XITE_Hits.m3u8
 #EXTINF:-1 tvg-id="ZDF.de@SD" tvg-logo="https://i.imgur.com/rtLb6m9.png" tvg-language="" group-title="10 | YABANCI",ZDF
