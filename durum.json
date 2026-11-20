@@ -1,5 +1,5 @@
 {
-  "guncellendi_utc": "2026-11-20T07:29:45.230090+00:00",
+  "guncellendi_utc": "2026-11-20T20:32:12.009297+00:00",
   "aday_sayilari": {
     "canli": 824,
     "filmler": 114,
@@ -13,8 +13,8 @@
   "basarili_kaynaklar": [
     {
       "tur": "canli",
-      "kaynak": "IPTV-org Türkiye",
-      "kayit": 178
+      "kaynak": "Ömer Denizhan Türkiye",
+      "kayit": 326
     },
     {
       "tur": "canli",
@@ -23,13 +23,13 @@
     },
     {
       "tur": "canli",
-      "kaynak": "IPTV-org Almanya",
-      "kayit": 309
+      "kaynak": "IPTV-org Türkiye",
+      "kayit": 178
     },
     {
       "tur": "canli",
-      "kaynak": "Ömer Denizhan Türkiye",
-      "kayit": 326
+      "kaynak": "IPTV-org Almanya",
+      "kayit": 309
     },
     {
       "tur": "filmler",
@@ -38,13 +38,13 @@
     },
     {
       "tur": "filmler",
-      "kaynak": "Kanal D Evde Sinema",
-      "kayit": 59
+      "kaynak": "NOW Filmler",
+      "kayit": 35
     },
     {
       "tur": "filmler",
-      "kaynak": "NOW Filmler",
-      "kayit": 35
+      "kaynak": "Kanal D Evde Sinema",
+      "kayit": 59
     },
     {
       "tur": "diziler",
