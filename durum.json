@@ -1,7 +1,7 @@
 {
-  "guncellendi_utc": "2026-11-19T20:48:12.233706+00:00",
+  "guncellendi_utc": "2026-11-20T07:29:45.230090+00:00",
   "aday_sayilari": {
-    "canli": 825,
+    "canli": 824,
     "filmler": 114,
     "diziler": 10121
   },
@@ -19,7 +19,7 @@
     {
       "tur": "canli",
       "kaynak": "IPTV-org Azerbaycan",
-      "kayit": 14
+      "kayit": 13
     },
     {
       "tur": "canli",
@@ -38,18 +38,13 @@
     },
     {
       "tur": "filmler",
-      "kaynak": "NOW Filmler",
-      "kayit": 35
-    },
-    {
-      "tur": "filmler",
       "kaynak": "Kanal D Evde Sinema",
       "kayit": 59
     },
     {
-      "tur": "diziler",
-      "kaynak": "Kanal D Diziler",
-      "kayit": 2661
+      "tur": "filmler",
+      "kaynak": "NOW Filmler",
+      "kayit": 35
     },
     {
       "tur": "diziler",
@@ -58,13 +53,18 @@
     },
     {
       "tur": "diziler",
-      "kaynak": "NOW Diziler",
-      "kayit": 1915
+      "kaynak": "Kanal D Diziler",
+      "kayit": 2661
     },
     {
       "tur": "diziler",
       "kaynak": "TRT 1 Arşiv",
       "kayit": 2032
+    },
+    {
+      "tur": "diziler",
+      "kaynak": "NOW Diziler",
+      "kayit": 1915
     },
     {
       "tur": "diziler",
