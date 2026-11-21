@@ -1,7 +1,7 @@
 {
-  "guncellendi_utc": "2026-11-20T20:32:12.009297+00:00",
+  "guncellendi_utc": "2026-11-21T07:25:13.994425+00:00",
   "aday_sayilari": {
-    "canli": 824,
+    "canli": 492,
     "filmler": 114,
     "diziler": 10121
   },
@@ -11,11 +11,6 @@
     "diziler": "güncellendi"
   },
   "basarili_kaynaklar": [
-    {
-      "tur": "canli",
-      "kaynak": "Ömer Denizhan Türkiye",
-      "kayit": 326
-    },
     {
       "tur": "canli",
       "kaynak": "IPTV-org Azerbaycan",
@@ -29,12 +24,7 @@
     {
       "tur": "canli",
       "kaynak": "IPTV-org Almanya",
-      "kayit": 309
-    },
-    {
-      "tur": "filmler",
-      "kaynak": "PuhuTV Filmler",
-      "kayit": 20
+      "kayit": 303
     },
     {
       "tur": "filmler",
@@ -42,24 +32,14 @@
       "kayit": 35
     },
     {
-      "tur": "filmler",
-      "kaynak": "Kanal D Evde Sinema",
-      "kayit": 59
-    },
-    {
       "tur": "diziler",
       "kaynak": "Show TV Diziler",
       "kayit": 913
     },
     {
-      "tur": "diziler",
-      "kaynak": "Kanal D Diziler",
-      "kayit": 2661
-    },
-    {
-      "tur": "diziler",
-      "kaynak": "TRT 1 Arşiv",
-      "kayit": 2032
+      "tur": "filmler",
+      "kaynak": "PuhuTV Filmler",
+      "kayit": 20
     },
     {
       "tur": "diziler",
@@ -68,11 +48,31 @@
     },
     {
       "tur": "diziler",
+      "kaynak": "TRT 1 Arşiv",
+      "kayit": 2032
+    },
+    {
+      "tur": "filmler",
+      "kaynak": "Kanal D Evde Sinema",
+      "kayit": 59
+    },
+    {
+      "tur": "diziler",
+      "kaynak": "Kanal D Diziler",
+      "kayit": 2661
+    },
+    {
+      "tur": "diziler",
       "kaynak": "Teve2 Diziler",
       "kayit": 2600
     }
   ],
   "hatalar": [
+    {
+      "tur": "canli",
+      "kaynak": "Ömer Denizhan Türkiye",
+      "hata": "HTTP Error 503: Backend.max_conn reached"
+    },
     {
       "tur": "canli",
       "kaynak": "Legal IPTV Türkiye",
