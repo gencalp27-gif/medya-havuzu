@@ -1,7 +1,7 @@
 {
-  "guncellendi_utc": "2026-11-21T07:25:13.994425+00:00",
+  "guncellendi_utc": "2026-11-21T19:29:50.249831+00:00",
   "aday_sayilari": {
-    "canli": 492,
+    "canli": 818,
     "filmler": 114,
     "diziler": 10121
   },
@@ -13,6 +13,11 @@
   "basarili_kaynaklar": [
     {
       "tur": "canli",
+      "kaynak": "IPTV-org Almanya",
+      "kayit": 303
+    },
+    {
+      "tur": "canli",
       "kaynak": "IPTV-org Azerbaycan",
       "kayit": 13
     },
@@ -22,34 +27,9 @@
       "kayit": 178
     },
     {
-      "tur": "canli",
-      "kaynak": "IPTV-org Almanya",
-      "kayit": 303
-    },
-    {
       "tur": "filmler",
       "kaynak": "NOW Filmler",
       "kayit": 35
-    },
-    {
-      "tur": "diziler",
-      "kaynak": "Show TV Diziler",
-      "kayit": 913
-    },
-    {
-      "tur": "filmler",
-      "kaynak": "PuhuTV Filmler",
-      "kayit": 20
-    },
-    {
-      "tur": "diziler",
-      "kaynak": "NOW Diziler",
-      "kayit": 1915
-    },
-    {
-      "tur": "diziler",
-      "kaynak": "TRT 1 Arşiv",
-      "kayit": 2032
     },
     {
       "tur": "filmler",
@@ -62,17 +42,37 @@
       "kayit": 2661
     },
     {
+      "tur": "filmler",
+      "kaynak": "PuhuTV Filmler",
+      "kayit": 20
+    },
+    {
+      "tur": "diziler",
+      "kaynak": "NOW Diziler",
+      "kayit": 1915
+    },
+    {
+      "tur": "canli",
+      "kaynak": "Ömer Denizhan Türkiye",
+      "kayit": 326
+    },
+    {
+      "tur": "diziler",
+      "kaynak": "Show TV Diziler",
+      "kayit": 913
+    },
+    {
+      "tur": "diziler",
+      "kaynak": "TRT 1 Arşiv",
+      "kayit": 2032
+    },
+    {
       "tur": "diziler",
       "kaynak": "Teve2 Diziler",
       "kayit": 2600
     }
   ],
   "hatalar": [
-    {
-      "tur": "canli",
-      "kaynak": "Ömer Denizhan Türkiye",
-      "hata": "HTTP Error 503: Backend.max_conn reached"
-    },
     {
       "tur": "canli",
       "kaynak": "Legal IPTV Türkiye",
