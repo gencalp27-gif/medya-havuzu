@@ -1,5 +1,5 @@
 {
-  "guncellendi_utc": "2026-11-22T07:06:10.690681+00:00",
+  "guncellendi_utc": "2026-11-22T19:50:56.855526+00:00",
   "aday_sayilari": {
     "canli": 809,
     "filmler": 114,
@@ -13,8 +13,13 @@
   "basarili_kaynaklar": [
     {
       "tur": "canli",
-      "kaynak": "Ömer Denizhan Türkiye",
-      "kayit": 326
+      "kaynak": "IPTV-org Türkiye",
+      "kayit": 177
+    },
+    {
+      "tur": "canli",
+      "kaynak": "IPTV-org Azerbaycan",
+      "kayit": 4
     },
     {
       "tur": "canli",
@@ -23,18 +28,13 @@
     },
     {
       "tur": "canli",
-      "kaynak": "IPTV-org Azerbaycan",
-      "kayit": 4
+      "kaynak": "Ömer Denizhan Türkiye",
+      "kayit": 326
     },
     {
       "tur": "filmler",
       "kaynak": "PuhuTV Filmler",
       "kayit": 20
-    },
-    {
-      "tur": "canli",
-      "kaynak": "IPTV-org Türkiye",
-      "kayit": 177
     },
     {
       "tur": "filmler",
@@ -53,8 +53,8 @@
     },
     {
       "tur": "diziler",
-      "kaynak": "NOW Diziler",
-      "kayit": 1915
+      "kaynak": "TRT 1 Arşiv",
+      "kayit": 2032
     },
     {
       "tur": "diziler",
@@ -63,8 +63,8 @@
     },
     {
       "tur": "diziler",
-      "kaynak": "TRT 1 Arşiv",
-      "kayit": 2032
+      "kaynak": "NOW Diziler",
+      "kayit": 1915
     },
     {
       "tur": "diziler",
