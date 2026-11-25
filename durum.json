@@ -1,5 +1,5 @@
 {
-  "guncellendi_utc": "2026-11-25T08:51:10.051757+00:00",
+  "guncellendi_utc": "2026-11-25T21:50:19.678057+00:00",
   "aday_sayilari": {
     "canli": 814,
     "filmler": 114,
@@ -13,16 +13,6 @@
   "basarili_kaynaklar": [
     {
       "tur": "canli",
-      "kaynak": "IPTV-org Azerbaycan",
-      "kayit": 7
-    },
-    {
-      "tur": "canli",
-      "kaynak": "IPTV-org Türkiye",
-      "kayit": 180
-    },
-    {
-      "tur": "canli",
       "kaynak": "IPTV-org Almanya",
       "kayit": 303
     },
@@ -30,6 +20,16 @@
       "tur": "canli",
       "kaynak": "Ömer Denizhan Türkiye",
       "kayit": 326
+    },
+    {
+      "tur": "canli",
+      "kaynak": "IPTV-org Azerbaycan",
+      "kayit": 7
+    },
+    {
+      "tur": "canli",
+      "kaynak": "IPTV-org Türkiye",
+      "kayit": 180
     },
     {
       "tur": "filmler",
@@ -42,14 +42,14 @@
       "kayit": 35
     },
     {
-      "tur": "diziler",
-      "kaynak": "Kanal D Diziler",
-      "kayit": 2661
-    },
-    {
       "tur": "filmler",
       "kaynak": "Kanal D Evde Sinema",
       "kayit": 59
+    },
+    {
+      "tur": "diziler",
+      "kaynak": "Kanal D Diziler",
+      "kayit": 2661
     },
     {
       "tur": "diziler",
@@ -58,13 +58,13 @@
     },
     {
       "tur": "diziler",
-      "kaynak": "TRT 1 Arşiv",
-      "kayit": 2032
+      "kaynak": "NOW Diziler",
+      "kayit": 1915
     },
     {
       "tur": "diziler",
-      "kaynak": "NOW Diziler",
-      "kayit": 1915
+      "kaynak": "TRT 1 Arşiv",
+      "kayit": 2032
     },
     {
       "tur": "diziler",
