@@ -1,7 +1,7 @@
 {
-  "guncellendi_utc": "2026-11-25T21:50:19.678057+00:00",
+  "guncellendi_utc": "2026-11-26T08:37:07.216513+00:00",
   "aday_sayilari": {
-    "canli": 814,
+    "canli": 813,
     "filmler": 114,
     "diziler": 10121
   },
@@ -13,8 +13,13 @@
   "basarili_kaynaklar": [
     {
       "tur": "canli",
-      "kaynak": "IPTV-org Almanya",
-      "kayit": 303
+      "kaynak": "IPTV-org Azerbaycan",
+      "kayit": 7
+    },
+    {
+      "tur": "canli",
+      "kaynak": "IPTV-org Türkiye",
+      "kayit": 180
     },
     {
       "tur": "canli",
@@ -23,13 +28,8 @@
     },
     {
       "tur": "canli",
-      "kaynak": "IPTV-org Azerbaycan",
-      "kayit": 7
-    },
-    {
-      "tur": "canli",
-      "kaynak": "IPTV-org Türkiye",
-      "kayit": 180
+      "kaynak": "IPTV-org Almanya",
+      "kayit": 302
     },
     {
       "tur": "filmler",
@@ -48,18 +48,13 @@
     },
     {
       "tur": "diziler",
-      "kaynak": "Kanal D Diziler",
-      "kayit": 2661
+      "kaynak": "NOW Diziler",
+      "kayit": 1915
     },
     {
       "tur": "diziler",
       "kaynak": "Show TV Diziler",
       "kayit": 913
-    },
-    {
-      "tur": "diziler",
-      "kaynak": "NOW Diziler",
-      "kayit": 1915
     },
     {
       "tur": "diziler",
@@ -70,6 +65,11 @@
       "tur": "diziler",
       "kaynak": "Teve2 Diziler",
       "kayit": 2600
+    },
+    {
+      "tur": "diziler",
+      "kaynak": "Kanal D Diziler",
+      "kayit": 2661
     }
   ],
   "hatalar": [
