@@ -1,5 +1,5 @@
 {
-  "guncellendi_utc": "2026-11-27T21:27:57.754843+00:00",
+  "guncellendi_utc": "2026-11-28T08:04:37.977152+00:00",
   "aday_sayilari": {
     "canli": 813,
     "filmler": 114,
@@ -13,13 +13,18 @@
   "basarili_kaynaklar": [
     {
       "tur": "canli",
+      "kaynak": "IPTV-org Azerbaycan",
+      "kayit": 7
+    },
+    {
+      "tur": "canli",
       "kaynak": "IPTV-org Türkiye",
       "kayit": 180
     },
     {
       "tur": "canli",
-      "kaynak": "IPTV-org Azerbaycan",
-      "kayit": 7
+      "kaynak": "Ömer Denizhan Türkiye",
+      "kayit": 326
     },
     {
       "tur": "filmler",
@@ -28,18 +33,8 @@
     },
     {
       "tur": "canli",
-      "kaynak": "Ömer Denizhan Türkiye",
-      "kayit": 326
-    },
-    {
-      "tur": "canli",
       "kaynak": "IPTV-org Almanya",
       "kayit": 302
-    },
-    {
-      "tur": "diziler",
-      "kaynak": "Kanal D Diziler",
-      "kayit": 2661
     },
     {
       "tur": "filmler",
@@ -53,6 +48,11 @@
     },
     {
       "tur": "diziler",
+      "kaynak": "Kanal D Diziler",
+      "kayit": 2661
+    },
+    {
+      "tur": "diziler",
       "kaynak": "Show TV Diziler",
       "kayit": 913
     },
@@ -63,13 +63,13 @@
     },
     {
       "tur": "diziler",
-      "kaynak": "TRT 1 Arşiv",
-      "kayit": 2032
+      "kaynak": "Teve2 Diziler",
+      "kayit": 2600
     },
     {
       "tur": "diziler",
-      "kaynak": "Teve2 Diziler",
-      "kayit": 2600
+      "kaynak": "TRT 1 Arşiv",
+      "kayit": 2032
     }
   ],
   "hatalar": [
